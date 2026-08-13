@@ -1,27 +1,19 @@
+# Contributor: Julian Corbet <julian-corbet@users.noreply.github.com>
 # Maintainer: Julian Corbet <julian-corbet@users.noreply.github.com>
 pkgname=dotkeeper
 pkgver=0.0.0
 pkgrel=0
 pkgdesc="P2P repo sync with git history — embedded Syncthing + git auto-sync"
 url="https://github.com/julian-corbet/dotkeeper"
-# Pure-Go binary (CGO_ENABLED=0); same arch matrix as the GitHub release.
-arch="x86_64 aarch64 armv7 x86 ppc64le s390x riscv64"
+arch="all"
 license="AGPL-3.0-only"
 depends="git"
 makedepends="go"
-# !check     — full suite needs Docker for multipeer-e2e; opt in via `abuild -K`.
-# !strip     — Go binaries are already stripped via `-ldflags="-s -w"` in build().
-#              abuild's strip step calls `<arch>-alpine-linux-musl-strip` which
-#              isn't present in the container when CARCH differs from the host
-#              arch (cross-compile path). Skipping is correct + simpler than
-#              pulling in cross-binutils.
-# !tracedeps — pure-Go CGO_ENABLED=0 build produces no shared-object
-#              dependencies. abuild's tracedeps invokes `apk info --who-owns`
-#              which apk-tools 4.x (Alpine edge as of 2026-05) renamed,
-#              breaking the call site upstream. Our `depends="git"` already
-#              declares what we need; tracedeps would only confirm zero
-#              shared-library deps, so skipping is no information loss.
-options="!check !strip !tracedeps"
+subpackages="$pkgname-doc"
+# net: Go modules are downloaded during the build.
+# !check: the complete test tier includes a Docker-backed multipeer suite.
+# !strip: build() already strips the static Go binary.
+options="net !check !strip"
 source="$pkgname-$pkgver.tar.gz::https://github.com/julian-corbet/dotkeeper/archive/v$pkgver.tar.gz"
 builddir="$srcdir/$pkgname-$pkgver"
 
@@ -45,12 +37,11 @@ build() {
 		./cmd/dotkeeper
 }
 
-# Opt-in: `abuild -K rootbld` to keep the build dir + run the suite.
-# Multipeer-e2e is excluded because it needs Docker. The unit + fuzz +
-# perf-budget tiers run cleanly under the noassets tag.
+# Runnable unit-test subset for package maintainers. The complete project test
+# tier also includes a Docker-backed multipeer suite, so package builds declare
+# !check above rather than presenting this subset as the complete test gate.
 check() {
-	go test -tags noassets -short ./... \
-		|| return 1
+	go test -tags noassets -short ./...
 }
 
 package() {

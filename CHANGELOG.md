@@ -12,6 +12,11 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Added a concise contributor-agent guide and a spec-conformant `/llms.txt` discovery map for
   the project site.
 
+### Changed
+
+- Aligned the native Alpine package template with current aports conventions and split its
+  documentation into the standard `dotkeeper-doc` subpackage.
+
 ### Fixed
 
 - Added a SHA-256 sidecar for each native Alpine APK, which is attached after the release's
