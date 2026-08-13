@@ -7,6 +7,32 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.2.7] - 2026-05-26
+
+### Fixed
+
+- Increased the Syncthing API client's `SetConfig` timeout from 10 to 30 seconds so configuration
+  updates remain reliable while a busy embedded Syncthing instance processes large folder sets.
+
+## [1.2.6] - 2026-05-26
+
+### Fixed
+
+- Made the native Alpine package workflow trust its disposable CI signing key before building the
+  repository index.
+
+## [1.2.5] - 2026-05-26
+
+### Fixed
+
+- Disabled Alpine `abuild`'s unsupported `tracedeps` pass for the already self-contained Go binary.
+
+## [1.2.4] - 2026-05-26
+
+### Fixed
+
+- Disabled Alpine `abuild`'s redundant strip pass because the Go release binary is already stripped.
+
 ## [1.2.3] - 2026-05-26
 
 Docs + CI release. No source changes; binary identical to v1.2.2.
