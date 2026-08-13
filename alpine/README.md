@@ -9,8 +9,8 @@ The native build is **distinct** from the `.apk` produced by the
 release pipeline's `nfpm` step. `nfpm` produces a generic `.apk`
 that works for most tools but doesn't carry the metadata that
 `aports` expects — for upstream submission we need a real
-`abuild`-produced package. Both exist in releases today; the native
-one is the authoritative source for Alpine users.
+`abuild`-produced package. Releases can carry both; the native one is
+the authoritative source for Alpine users.
 
 ## Files in this directory
 
@@ -21,18 +21,22 @@ one is the authoritative source for Alpine users.
 
 ## How the native build runs
 
-Every push of a `v*` tag triggers two release workflows:
+A `v*` tag starts the normal release workflow. Publishing that GitHub
+release then starts the native Alpine workflow:
 
 1. **`.github/workflows/release.yml`** — cross-compiles binaries for
-   13 OS/arch combos, builds `.deb`/`.rpm`/`.apk`/`.pkg.tar.zst` via
-   `nfpm`, uploads everything to the GitHub release page.
+   the supported OS/architecture matrix, builds
+   `.deb`/`.rpm`/`.apk`/`.pkg.tar.zst` via `nfpm`, and publishes the
+   GitHub release.
 2. **`.github/workflows/alpine.yml`** — runs after the release is
    published, builds the APKBUILD inside an `alpine:edge` container
    via `abuild`, uploads the resulting native `.apk` to the same
    release.
 
-The native `.apk` has filename `dotkeeper_<version>_alpine_<arch>.apk`
-to distinguish from the nfpm one.
+Maintainers can also replay the Alpine workflow manually for an existing
+release tag. The native `.apk` has filename
+`dotkeeper_v<version>_alpine_<arch>.apk` to distinguish it from the nfpm
+one.
 
 ## Installing on Alpine
 
@@ -41,13 +45,20 @@ For an end user who wants the package today (before it lands in
 and install it locally:
 
 ```sh
-apk add --allow-untrusted dotkeeper_1.2.2_alpine_x86_64.apk
+apk add --allow-untrusted dotkeeper_vX.Y.Z_alpine_x86_64.apk
 ```
 
 The `--allow-untrusted` flag is needed because the CI build uses a
 disposable signing key per run (not added to the system's apk
 keyring). After upstream submission into `aports/community`, this
 flag will no longer be needed.
+
+Each native APK has a matching `.sha256` sidecar on the release page.
+Verify the download before installing it:
+
+```sh
+sha256sum -c dotkeeper_vX.Y.Z_alpine_x86_64.apk.sha256
+```
 
 ## Maintaining the APKBUILD
 
@@ -81,10 +92,10 @@ version bumps follow the same flow.
    ```sh
    git clone git@gitlab.alpinelinux.org:<your-namespace>/aports.git
    cd aports
-   git checkout -b dotkeeper-1.2.2
+   git checkout -b dotkeeper-X.Y.Z
    mkdir -p community/dotkeeper
    cp <dotkeeper-repo>/alpine/APKBUILD community/dotkeeper/APKBUILD
-   sed -i 's/^pkgver=0\.0\.0/pkgver=1.2.2/' community/dotkeeper/APKBUILD
+   sed -i 's/^pkgver=0\.0\.0/pkgver=X.Y.Z/' community/dotkeeper/APKBUILD
    cd community/dotkeeper
    abuild checksum    # fills sha512sums
    abuild -r          # test-build the package
@@ -93,8 +104,8 @@ version bumps follow the same flow.
 4. **Open MR**:
    ```sh
    git add APKBUILD
-   git commit -m 'community/dotkeeper: new aport'  # or 'upgrade to 1.2.2' for bumps
-   git push origin dotkeeper-1.2.2
+   git commit -m 'community/dotkeeper: new aport'  # or 'upgrade to X.Y.Z' for bumps
+   git push origin dotkeeper-X.Y.Z
    ```
    Then open a Merge Request on gitlab.alpinelinux.org targeting
    `master`. Alpine maintainers review; once merged, the package
@@ -112,5 +123,6 @@ should pass `abuild checksum` + `abuild -r` locally, the submitter
 should be reachable for review comments, and the commit message
 should match Alpine's conventions. Automating it would either skip
 those steps (lower quality) or layer enough scaffolding around them
-that the automation itself becomes the maintenance burden. Once a
-quarter at the current release cadence, manual is the right tradeoff.
+that the automation itself becomes the maintenance burden. Manual
+submission remains the right tradeoff while those updates are
+occasional.

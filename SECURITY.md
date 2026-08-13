@@ -4,9 +4,8 @@
 
 | Version | Supported |
 |---------|-----------|
-| 1.0.x   | Yes       |
-| 0.9.x   | Yes       |
-| < 0.9   | No        |
+| 1.2.x   | Yes       |
+| < 1.2   | No        |
 
 ## Reporting a Vulnerability
 
@@ -26,6 +25,9 @@ include:
 - Any suggested fix (optional)
 
 You should receive an acknowledgement within 48 hours.
+
+With the reporter's consent, we credit vulnerability reporters in the
+relevant CHANGELOG entry. Reporters may remain anonymous if they prefer.
 
 If GitHub Security Advisories is unavailable to you, contact the maintainer
 through the [GitHub profile](https://github.com/julian-corbet).
@@ -55,9 +57,11 @@ dotkeeper tracks known vulnerabilities in its dependency tree via `govulncheck`.
 
 QUIC remains disabled by default in dotkeeper's generated `config.xml` (TCP-only listen on `:12000`). The CVE-mitigation rationale is now historical — re-enabling QUIC for users who explicitly want it is tracked for a future release.
 
-### Current known advisories
+### Current advisory status
 
-**None.** `govulncheck -tags noassets ./...` against v1.0.0 reports
-"No vulnerabilities found." The stdlib advisories that v0.8.0 carried
-(`net`, `net/http`, `net/mail`, `html/template`, …) cleared with the
-Go 1.26.3 toolchain bump in v0.8.2 and have not regressed.
+Advisory status is verified continuously instead of being frozen to a release
+snapshot in this document. Every pull request runs
+`govulncheck -tags noassets ./...`; Dependabot checks Go modules, GitHub
+Actions, and the container base each week and opens security updates as soon
+as GitHub reports them. Consult the latest CI run and the repository Security
+tab for the current result.

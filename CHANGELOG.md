@@ -7,6 +7,76 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Added a SHA-256 sidecar for each native Alpine APK, which is attached after the release's
+  aggregate checksum manifest has already been created.
+
+## [1.2.9] - 2026-08-13
+
+### Changed
+
+- Pinned the multipeer test images by digest and aligned them with the supported Go 1.26.5 and
+  Alpine 3.24 toolchain.
+
+### Fixed
+
+- Restored native Alpine package publication with `abuild` 3.18 by declaring the package output
+  repository explicitly; both architecture jobs now run independently, and maintainers can replay
+  the workflow for an existing release tag.
+
+### Security
+
+- Updated the Go `x/crypto`, `x/net`, and `x/text` modules; `x/net` 0.58.0 includes the fix for
+  GO-2026-5942.
+
+## [1.2.8] - 2026-08-13
+
+### Changed
+
+- Updated `github.com/quic-go/quic-go`, `golang.org/x/crypto`, `golang.org/x/net`,
+  `golang.org/x/sys`, and the pinned GitHub Actions used by CI and release workflows.
+- Updated the container runtime from Alpine 3.23 to the Alpine 3.24 stable series.
+- Moved the project site onto the shared FOSS design system while retaining dotkeeper's theme.
+- Refreshed the OpenSSF Best Practices evidence, supported-version policy, release history, and
+  distribution documentation to match the current project.
+- Added pull-request Docker builds so container/toolchain mismatches are caught before merge.
+
+### Security
+
+- Updated the Go toolchain and pinned container builder from 1.26.3 to 1.26.5 to address reachable
+  `crypto/tls` advisories, including GO-2026-5856.
+- Updated `golang.org/x/text` from 0.37.0 to 0.39.0 to address reachable normalization-parser
+  advisory GO-2026-5970.
+- Made reachable `govulncheck` findings fail the required build instead of being reported as
+  non-blocking workflow warnings.
+
+## [1.2.7] - 2026-05-26
+
+### Fixed
+
+- Increased the Syncthing API client's `SetConfig` timeout from 10 to 30 seconds so configuration
+  updates remain reliable while a busy embedded Syncthing instance processes large folder sets.
+
+## [1.2.6] - 2026-05-26
+
+### Fixed
+
+- Made the native Alpine package workflow trust its disposable CI signing key before building the
+  repository index.
+
+## [1.2.5] - 2026-05-26
+
+### Fixed
+
+- Disabled Alpine `abuild`'s unsupported `tracedeps` pass for the already self-contained Go binary.
+
+## [1.2.4] - 2026-05-26
+
+### Fixed
+
+- Disabled Alpine `abuild`'s redundant strip pass because the Go release binary is already stripped.
+
 ## [1.2.3] - 2026-05-26
 
 Docs + CI release. No source changes; binary identical to v1.2.2.
@@ -561,10 +631,10 @@ right tool for every job, automatically improving over time.
 ### Changed
 
 - **Test fixture scrub:** `cmd/dotkeeper/transport_cli_test.go`
-  was using the maintainer's personal username `alice` as an SSH
-  user in synthetic test cases. The v1.0.1 scrub (PR #48) caught
-  the same pattern in `gitssh_test.go` but missed this file.
-  Replaced with synthetic `alice` throughout.
+  was using the maintainer's personal username as an SSH user in
+  synthetic test cases. The v1.0.1 scrub (PR #48) caught the same
+  pattern in `gitssh_test.go` but missed this file. Replaced with
+  synthetic `alice` throughout.
 
 ## [1.1.8] - 2026-05-24
 
