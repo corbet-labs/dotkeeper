@@ -7,6 +7,13 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- Updated the Go toolchain from 1.26.3 to 1.26.5 to address reachable `crypto/tls` advisories,
+  including GO-2026-5856.
+- Updated `golang.org/x/text` from 0.37.0 to 0.39.0 to address reachable normalization-parser
+  advisory GO-2026-5970.
+
 ## [1.2.7] - 2026-05-26
 
 ### Fixed
