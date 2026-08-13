@@ -7,6 +7,11 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Synchronized the checked-in OpenSSF Best Practices evidence with the verified v1.2.10 release
+  and the project's conservative maintainer determinations.
+
 ## [1.2.10] - 2026-08-13
 
 ### Added
