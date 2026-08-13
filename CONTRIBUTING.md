@@ -165,7 +165,9 @@ Open a GitHub issue describing the use case, the proposed behaviour, and any alt
 
 ## Release process
 
-dotkeeper follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Releases are cut by pushing an annotated git tag matching `v*` to `main`; the [`Release` workflow](.github/workflows/release.yml) does the rest.
+dotkeeper follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Releases are cut by
+pushing an annotated git tag matching `v*` to `main`; the workflows under [`.github/workflows`](.github/workflows)
+then build and publish the release and distribution updates.
 
 ### Pre-release checklist
 
@@ -185,23 +187,36 @@ git push origin vX.Y.Z
 
 The tag must be annotated (`-a`), not lightweight: the release workflow consumes the tag's commit metadata. Push the tag itself, not a `--all` push that bundles other refs.
 
-### What the release workflow does
+### What the release automation does
 
-A tag push to `v*` triggers in parallel:
+A tag push to `v*` starts the release, AUR, and Homebrew workflows. Publishing the GitHub release
+then starts the Docker and native Alpine workflows:
 
-- **`Release` workflow** — builds binaries for Linux (amd64, arm64, armv7, 386, riscv64, ppc64le, s390x), macOS (amd64, arm64), and Windows (amd64), generates SHA256 checksums, creates the GitHub release with auto-generated notes plus the CHANGELOG section, and uploads the artifacts.
-- **`Publish to AUR`** — pushes a refreshed PKGBUILD to the `dotkeeper-bin` AUR package.
-- **`Publish to Homebrew tap`** — bumps the formula in `julian-corbet/homebrew-tap`.
-- **`Docker`** — builds and pushes the `ghcr.io/julian-corbet/dotkeeper:vX.Y.Z` and `:latest` images.
+- **`Release`** builds archives for Linux, macOS, Windows, FreeBSD, and OpenBSD; builds deb, rpm,
+  apk, and Arch Linux packages for the supported Linux architectures; generates SHA-256 checksums;
+  and creates the GitHub release with generated notes. The versioned changelog remains in the
+  tagged source rather than being copied into the generated release notes.
+- **`Publish to AUR`** refreshes both `dotkeeper-bin` and `dotkeeper-git`.
+- **`Publish to Homebrew tap`** updates the formula in `julian-corbet/homebrew-dotkeeper`.
+- **`Docker`** builds and pushes the multi-architecture
+  `ghcr.io/julian-corbet/dotkeeper:vX.Y.Z` and `:latest` images.
+- **`Alpine`** builds native x86_64 and aarch64 packages with `abuild` and attaches them to the
+  GitHub release.
 
 If any of these fail post-tag, fix forward (cut a follow-up patch release) rather than retag — published artifacts on AUR / Homebrew / GHCR persist independent of the GitHub release.
 
 ### After release
 
-Move the released entry's content from `## [Unreleased]` to its versioned section (if you hadn't already) and verify:
+Verify:
 
 - `gh release list --limit 1` shows the new tag as `Latest`.
+- The release contains the expected archives, native packages, aggregate `checksums_sha256.txt`,
+  and a `.sha256` sidecar for each native Alpine APK (those APKs are attached after the aggregate
+  manifest is created).
 - AUR (`https://aur.archlinux.org/packages/dotkeeper-bin`) reflects the new `pkgver`.
+- The Homebrew formula in `julian-corbet/homebrew-dotkeeper` reflects the new version.
+- The Docker and native Alpine workflows completed successfully, and the GHCR image can be pulled
+  anonymously (package visibility is configured separately from repository visibility).
 - The `Latest` badge in the README now points at the new tag.
 
 ## Governance

@@ -1,147 +1,73 @@
 # Alpine Linux packaging
 
-dotkeeper ships as a first-class Alpine package: a native `.apk` built
-with `abuild` against the upstream toolchain, suitable both for
-side-loading (`apk add` on a `.apk` file) and for upstream submission
-into Alpine's aports tree.
+dotkeeper ships a native Alpine package built with `abuild`. It is separate
+from the generic `.apk` produced by nFPM: the native package carries Alpine's
+own package metadata and is the authoritative artifact for Alpine users.
 
-The native build is **distinct** from the `.apk` produced by the
-release pipeline's `nfpm` step. `nfpm` produces a generic `.apk`
-that works for most tools but doesn't carry the metadata that
-`aports` expects — for upstream submission we need a real
-`abuild`-produced package. Both exist in releases today; the native
-one is the authoritative source for Alpine users.
+This directory contains the reusable packaging source:
 
-## Files in this directory
+| File | Purpose |
+|------|---------|
+| `APKBUILD` | Builds dotkeeper from a tagged source archive with the Alpine toolchain. |
+| `README.md` | Explains the release and upstream-maintenance paths. |
 
-| File         | Purpose |
-|--------------|---------|
-| `APKBUILD`   | Alpine package source. Source-based build (pulls the GitHub release tarball, runs `go build`, packages the binary). Aports-conformant: same file is shippable upstream. |
-| `README.md`  | This file. |
+## Release artifacts
 
-## How the native build runs
+Publishing a GitHub release starts `.github/workflows/alpine.yml`. The workflow
+builds native x86_64 and aarch64 packages in `alpine:edge`, then attaches them
+to the existing release. It can also be replayed manually for an existing tag.
 
-Every push of a `v*` tag triggers two release workflows:
+The APKBUILD declares `arch="all"` because dotkeeper is a pure-Go binary, and
+creates a conventional `dotkeeper-doc` subpackage. GitHub releases contain the
+main package only, named `dotkeeper_vX.Y.Z_alpine_<arch>.apk`, plus a matching
+SHA-256 sidecar.
 
-1. **`.github/workflows/release.yml`** — cross-compiles binaries for
-   13 OS/arch combos, builds `.deb`/`.rpm`/`.apk`/`.pkg.tar.zst` via
-   `nfpm`, uploads everything to the GitHub release page.
-2. **`.github/workflows/alpine.yml`** — runs after the release is
-   published, builds the APKBUILD inside an `alpine:edge` container
-   via `abuild`, uploads the resulting native `.apk` to the same
-   release.
-
-The native `.apk` has filename `dotkeeper_<version>_alpine_<arch>.apk`
-to distinguish from the nfpm one. The CI uploads the main package
-only; the `-doc` subpackage (created for upstream conformance) is
-built but not attached to the GitHub release.
-
-## Installing on Alpine
-
-For an end user who wants the package today (before it lands in
-Alpine's official repos), download the native `.apk` from the release
-page and install it locally:
+Verify the package before installing it:
 
 ```sh
-apk add --allow-untrusted dotkeeper_1.2.7_alpine_x86_64.apk
+sha256sum -c dotkeeper_vX.Y.Z_alpine_x86_64.apk.sha256
+apk add --allow-untrusted dotkeeper_vX.Y.Z_alpine_x86_64.apk
 ```
 
-The `--allow-untrusted` flag is needed because the CI build uses a
-disposable signing key per run (not added to the system's apk
-keyring). After upstream submission lands in aports, this flag will
-no longer be needed.
+`--allow-untrusted` is required because each CI run uses a disposable signing
+key that is not installed in Alpine's trusted keyring. Packages from Alpine's
+official repositories use Alpine's signing infrastructure and do not need it.
 
-## Maintaining the APKBUILD
+## Maintaining the in-repo APKBUILD
 
-The repo file at `alpine/APKBUILD` carries a placeholder `pkgver=0.0.0`.
-The CI workflow patches this in-place to the release tag's version
-before running `abuild`. **Do not commit a real version to the
-in-repo APKBUILD** — that would mean every release would also need a
-PR to bump the file, defeating the workflow's purpose.
+`alpine/APKBUILD` deliberately carries `pkgver=0.0.0` and an empty checksum.
+The release workflow replaces the version and runs `abuild checksum` for the
+selected tag. Do not commit a release version here; doing so would create an
+unnecessary second version-bump surface.
 
-When changing build deps, install targets, or the test command, edit
-`alpine/APKBUILD` directly. The next release will pick up the changes.
+Change the template when build dependencies, build flags, installed files, or
+subpackage boundaries change. The next release uses the updated template.
 
-## Upstream submission to aports
+## Submitting to Alpine aports
 
-Alpine aports lives at <https://gitlab.alpinelinux.org/alpine/aports>.
-New packages enter via the `testing/` directory and graduate to
-`community/` over time as maintainership stabilises. This in-repo
-APKBUILD is already shaped for aports (arch="all", `-doc` subpackage,
-`net` build option, no CI-specific `!tracedeps`), so the submission
-flow is mostly copy-paste + patch-version-in.
+New packages normally enter Alpine through `testing/`. Follow Alpine's current
+[package-creation guide](https://wiki.alpinelinux.org/wiki/Creating_an_Alpine_package)
+for account, fork, build-environment, and merge-request setup; Alpine's guide
+and aports policy are authoritative if this summary ever differs.
 
-### One-time account setup
-
-1. Create an account at <https://gitlab.alpinelinux.org/>. This is a
-   separate identity from gitlab.com; Alpine's GitLab is self-hosted.
-2. Add an SSH key under your profile so you can `git push` to your
-   fork.
-3. Fork <https://gitlab.alpinelinux.org/alpine/aports> into your
-   personal namespace. Use HTTPS or SSH for the clone URL depending
-   on your auth setup.
-
-### One-time local build environment
-
-Either run a persistent Alpine VM/container with abuild set up, or
-spin up a fresh container per submission. The container-per-submission
-flow is reproducible and what dotkeeper's own CI uses; the script
-below mirrors that.
+For the first submission:
 
 ```sh
-# Inside an `alpine:edge` container with the cloned aports tree mounted:
-apk add --no-cache alpine-sdk
-adduser -D -G abuild builder
-mkdir -p /home/builder/.abuild
-abuild-keygen -a -i -n           # interactive on first run
-```
-
-### Per-version submission
-
-```sh
-cd <your-aports-fork>
-git fetch origin && git checkout -b dotkeeper-1.2.7 origin/master
+cd <aports-fork>
+git switch -c dotkeeper-X.Y.Z origin/master
 mkdir -p testing/dotkeeper
 cp <dotkeeper-repo>/alpine/APKBUILD testing/dotkeeper/APKBUILD
-sed -i 's/^pkgver=0\.0\.0/pkgver=1.2.7/' testing/dotkeeper/APKBUILD
+sed -i 's/^pkgver=0\.0\.0/pkgver=X.Y.Z/' testing/dotkeeper/APKBUILD
 cd testing/dotkeeper
-abuild checksum                  # fills sha512sums
-abuild -F -r                     # local test build (validates the package)
+abuild checksum
+apkbuild-lint APKBUILD
+abuild -r
 git add APKBUILD
 git commit -m 'testing/dotkeeper: new aport'
-git push origin dotkeeper-1.2.7
+git push origin dotkeeper-X.Y.Z
 ```
 
-Then open a Merge Request on gitlab.alpinelinux.org targeting
-`master`. Alpine maintainers review; once merged, the package becomes
-available on edge as `apk add dotkeeper@testing`, and on subsequent
-stable releases.
-
-### Subsequent version bumps
-
-After the first submission lands, bumps follow the same flow with a
-slightly different commit message:
-
-```sh
-git checkout -b dotkeeper-1.2.8 origin/master
-sed -i 's/^pkgver=.*/pkgver=1.2.8/' testing/dotkeeper/APKBUILD
-abuild checksum
-abuild -F -r
-git add testing/dotkeeper/APKBUILD
-git commit -m 'testing/dotkeeper: upgrade to 1.2.8'
-git push origin dotkeeper-1.2.8
-```
-
-(If the package has graduated from `testing/` to `community/` by then,
-substitute `community/dotkeeper` in the paths and `community/dotkeeper:`
-in the commit prefix.)
-
-## Why not automate the upstream submission?
-
-Alpine's submission process expects a human in the loop: each MR
-should pass `abuild checksum` + `abuild -F -r` locally, the submitter
-should be reachable for review comments, and the commit message
-should match Alpine's conventions. Automating it would either skip
-those steps (lower quality) or layer enough scaffolding around them
-that the automation itself becomes the maintenance burden. At
-dotkeeper's current release cadence, manual is the right tradeoff.
+Open a merge request to `alpine/aports` after the lint and build complete
+without warnings. Once accepted, the copy in aports is the release-specific
+package definition; future version bumps happen there. Keep this in-repo
+template aligned when dotkeeper's build or installed payload changes.
