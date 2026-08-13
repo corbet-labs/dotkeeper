@@ -26,7 +26,7 @@
   "roles_responsibilities_status": "Met",
   "roles_responsibilities_justification": "CODEOWNERS specifies the maintainer for every directory; SECURITY.md names the disclosure channel; CONTRIBUTING.md describes the PR-review path.",
   "installation_common_status": "Met",
-  "installation_common_justification": "Common install paths cover the major platforms: GitHub Releases (multi-arch deb/rpm/apk/pkg.tar.zst plus tar.gz/zip archives and SHA-256 checksums); Homebrew tap (homebrew-dotkeeper); AUR packages (dotkeeper-bin and dotkeeper-git); Docker image at ghcr.io/julian-corbet/dotkeeper; and go install for supported Go toolchains.",
+  "installation_common_justification": "Common install paths cover the major platforms: GitHub Releases (multi-arch deb/rpm/apk/pkg.tar.zst plus tar.gz/zip archives and SHA-256 checksums); the Homebrew tap (homebrew-dotkeeper); AUR packages (dotkeeper-bin and dotkeeper-git); and go install for supported Go toolchains. GHCR is not counted because anonymous pulls were not available when checked on 2026-08-13.",
   "vulnerability_response_process_status": "Met",
   "vulnerability_response_process_justification": "SECURITY.md commits to acknowledgement within 48 hours via GitHub Security Advisories. Dependabot vulnerability alerts and automated security-fix PRs are enabled on the public repository.",
   "vulnerability_report_credit_status": "Met",
