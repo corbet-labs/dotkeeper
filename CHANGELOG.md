@@ -23,6 +23,10 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   aggregate checksum manifest has already been created.
 - Updated the contribution guide's required-check list to match branch protection.
 
+### Security
+
+- Added signed Sigstore provenance for release artifacts and published container images.
+
 ## [1.2.9] - 2026-08-13
 
 ### Changed

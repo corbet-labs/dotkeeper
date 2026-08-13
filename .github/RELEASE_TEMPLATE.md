@@ -49,3 +49,14 @@ go install -tags noassets github.com/julian-corbet/dotkeeper/cmd/dotkeeper@v0.0.
 ```bash
 sha256sum -c checksums_sha256.txt
 ```
+
+## Provenance
+
+The release also includes a `dotkeeper_vX.Y.Z.sigstore.json` bundle covering every artifact in
+the checksum manifest. Verify a downloaded artifact against GitHub's signed record with:
+
+```bash
+gh attestation verify dotkeeper_X.Y.Z_linux_amd64.tar.gz \
+  --repo julian-corbet/dotkeeper \
+  --signer-workflow julian-corbet/dotkeeper/.github/workflows/release.yml
+```

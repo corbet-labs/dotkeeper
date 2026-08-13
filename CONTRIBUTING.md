@@ -195,13 +195,15 @@ A tag push to `v*` starts the release, AUR, and Homebrew workflows. Publishing t
 then starts the Docker and native Alpine workflows:
 
 - **`Release`** builds archives for Linux, macOS, Windows, FreeBSD, and OpenBSD; builds deb, rpm,
-  apk, and Arch Linux packages for the supported Linux architectures; generates SHA-256 checksums;
-  and creates the GitHub release with generated notes. The versioned changelog remains in the
-  tagged source rather than being copied into the generated release notes.
+  apk, and Arch Linux packages for the supported Linux architectures; generates SHA-256 checksums
+  and signed Sigstore provenance for every artifact; and creates the GitHub release with generated
+  notes. The versioned changelog remains in the tagged source rather than being copied into the
+  generated release notes.
 - **`Publish to AUR`** refreshes both `dotkeeper-bin` and `dotkeeper-git`.
 - **`Publish to Homebrew tap`** updates the formula in `julian-corbet/homebrew-dotkeeper`.
 - **`Docker`** builds and pushes the multi-architecture
-  `ghcr.io/julian-corbet/dotkeeper:vX.Y.Z` and `:latest` images.
+  `ghcr.io/julian-corbet/dotkeeper:vX.Y.Z` and `:latest` images, then attaches signed provenance to
+  the pushed manifest.
 - **`Alpine`** builds native x86_64 and aarch64 packages with `abuild` and attaches them to the
   GitHub release.
 
@@ -213,12 +215,15 @@ Verify:
 
 - `gh release list --limit 1` shows the new tag as `Latest`.
 - The release contains the expected archives, native packages, aggregate `checksums_sha256.txt`,
-  and a `.sha256` sidecar for each native Alpine APK (those APKs are attached after the aggregate
-  manifest is created).
+  `dotkeeper_vX.Y.Z.sigstore.json` provenance bundle, and a `.sha256` sidecar for each native
+  Alpine APK (those APKs are attached after the aggregate manifest is created).
+- `gh attestation verify <downloaded-artifact> --repo julian-corbet/dotkeeper` verifies at least
+  one archive and one nFPM package against the release workflow's signed record.
 - AUR (`https://aur.archlinux.org/packages/dotkeeper-bin`) reflects the new `pkgver`.
 - The Homebrew formula in `julian-corbet/homebrew-dotkeeper` reflects the new version.
-- The Docker and native Alpine workflows completed successfully, and the GHCR image can be pulled
-  anonymously (package visibility is configured separately from repository visibility).
+- The Docker and native Alpine workflows completed successfully; the GHCR manifest has a verifiable
+  OCI provenance bundle; and the image can be pulled anonymously (package visibility is configured
+  separately from repository visibility).
 - The `Latest` badge in the README now points at the new tag.
 
 ## Governance
