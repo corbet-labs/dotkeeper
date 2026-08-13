@@ -53,6 +53,13 @@ disposable signing key per run (not added to the system's apk
 keyring). After upstream submission into `aports/community`, this
 flag will no longer be needed.
 
+Each native APK has a matching `.sha256` sidecar on the release page.
+Verify the download before installing it:
+
+```sh
+sha256sum -c dotkeeper_vX.Y.Z_alpine_x86_64.apk.sha256
+```
+
 ## Maintaining the APKBUILD
 
 The repo file at `alpine/APKBUILD` carries a placeholder `pkgver=0.0.0`.
