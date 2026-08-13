@@ -62,11 +62,9 @@ jobs:
       - name: Log in to GHCR
         if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
         # PACKAGES_TOKEN is a classic PAT owned by julian-corbet with
-        # write:packages scope. Needed instead of GITHUB_TOKEN because the
-        # default workflow token cannot CREATE a new package under a user
-        # namespace — it can only push to packages already linked to the
-        # repo. This is the first publish of ghcr.io/julian-corbet/dotkeeper
-        # so the PAT is required. Same secret homebrew.yml uses.
+        # write:packages scope. It authorizes publication to the maintainer's
+        # user namespace independently of the repository workflow token. The
+        # same secret is used by homebrew.yml.
         uses: docker/login-action@371161bbe7024a29a25c5e19bfcbc0804fe9ad2c # v4.5.2
         with:
           registry: ghcr.io
