@@ -1,151 +1,73 @@
-# AGENTS.md
+# Working on dotkeeper
 
-Guidance for AI coding agents (and humans) contributing to **dotkeeper**.
-dotkeeper is a single Go binary that does real-time peer-to-peer sync of code,
-dotfiles, and notes across machines (embedded Syncthing) with a staggered git
-auto-backup underneath. This file is the contributor-facing quick reference;
-[`CONTRIBUTING.md`](CONTRIBUTING.md) is the authoritative source for anything
-not covered here.
+This is the quick reference for coding agents and contributors. Keep it short;
+[`CONTRIBUTING.md`](CONTRIBUTING.md) is the authoritative workflow and policy
+document.
 
-## Prerequisites
+## Ground truth
 
-- **Go 1.26+** (see `go 1.26.3` in [`go.mod`](go.mod); build only).
-- **git** on `PATH`.
-- For running the daemon: a service manager — systemd (Linux), launchd (macOS),
-  or cron (BSD/fallback). Not needed just to build and test.
+- Read [`README.md`](README.md) for the supported user experience and command
+  surface.
+- Read [`docs/architecture.md`](docs/architecture.md) and the
+  [ADR index](docs/adr/README.md) before changing state ownership, discovery,
+  reconciliation, or transport behavior.
+- Verify documentation against the implementation and tests. Do not preserve a
+  stale claim merely because another document repeats it.
+- Never add private machine names, repository topology, credentials, or local
+  paths to this public repository.
 
-## Build
+## Build and validation
 
-Always build through the Makefile, **not** plain `go build ./...`:
+Use the Go version declared in [`go.mod`](go.mod). Build and test through the
+Makefile:
 
-```bash
-make build       # build ./cmd/dotkeeper with version + commit baked in
-make install     # build, then copy to ~/.local/bin/dotkeeper
-make build-debug # no ldflag stripping, for delve
+```sh
+make build
+make test
 ```
 
-Why: dotkeeper embeds Syncthing as a library. Syncthing's `lib/api` package
-expects generated web-GUI assets that dotkeeper does not ship, so a plain
-`go build ./cmd/dotkeeper` fails with `undefined: auto.Assets`. The fix is the
-`-tags noassets` build tag, which the Makefile, Dockerfile, and CI set
-automatically. If you must invoke Go directly:
+dotkeeper embeds Syncthing without its web assets. Direct Go commands must use
+the `noassets` build tag:
 
-```bash
+```sh
 go build -tags noassets ./cmd/dotkeeper
-```
-
-If your IDE/linter shows the `auto.Assets` error, configure gopls to pass
-`-tags noassets`.
-
-## Test
-
-```bash
-make test       # go test -tags noassets ./...
-make cover      # tests + coverage.out + coverage.html
-```
-
-The suite covers unit, integration, and end-to-end flows plus fuzz targets,
-under `internal/` and `cmd/`. Direct Go invocation must include the tag:
-
-```bash
 go test -tags noassets ./...
-```
-
-**Test policy** (enforced in review):
-
-- New feature → must include tests for the new behaviour.
-- Bug fix → must include a regression test that fails on the parent commit and
-  passes on the fix.
-- Refactor → existing tests must keep passing.
-- Docs / CI / packaging → no tests required.
-
-## Lint & format
-
-```bash
-gofmt -l .                                     # must report nothing
 go vet -tags noassets ./...
-golangci-lint run --build-tags noassets ./...  # baseline: zero findings
+golangci-lint run --build-tags noassets ./...
 ```
 
-Install the linter at the pinned version used by CI:
+Required pull-request checks are `build`, `lint`, `multipeer-e2e`,
+`fuzz-smoke`, and `Analyze (go)`. Let GitHub Actions run the container-backed
+multipeer suite and the repository's pinned tool versions.
 
-```bash
-go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.4
-```
+## Repository map
 
-CI gates PRs on `build` and `lint`; running these locally before pushing avoids
-round-trips.
+- `cmd/dotkeeper/` — CLI entry point and command wiring.
+- `internal/config/` — `machine.toml`, `state.toml`, and per-repository config.
+- `internal/reconcile/` — pure diff, action model, and idempotent application.
+- `internal/stengine/` and `internal/stclient/` — embedded Syncthing lifecycle
+  and API access.
+- `internal/gitsync/`, `internal/subscribe/`, and `internal/transport/` — git
+  history, folder subscriptions, and transport selection.
+- `tests/multipeer/` — container-backed peer-to-peer behavior tests.
+- `docs/` — architecture, ADRs, and portable examples.
+- `alpine/`, `nfpm.yml`, and `.github/workflows/` — packaging and release paths.
+- `site/` — static project site served by Cloudflare.
 
-## Project layout
+## Change discipline
 
-```
-cmd/dotkeeper/    CLI entrypoint + cobra command wiring (main.go) and CLI tests
-internal/         all implementation packages (not a public API surface):
-  config/           read/write machine.toml, state.toml, .dotkeeper.toml
-  discovery/        scan-root discovery of managed repos
-  reconcile/        desired/observed model, pure Diff, action types, applier
-  stengine/         embedded Syncthing lifecycle
-  stclient/         Syncthing REST API client
-  conflict/         sync-conflict detection and resolution
-  doctor/           dotkeeper doctor health checks
-  gitsync/          staggered git auto-commit + push backup
-  gitident/         canonical git-URL identity (subscription matching)
-  subscribe/        declarative subscriptions + offer matching
-  transport/        multi-transport routing + cost model
-  benchmarker/      background transport benchmarking
-  activity/ procnice/ service/ watchhealth/  supporting subsystems
-docs/             architecture.md, adr/ (decision records), examples/
-site/             static homepage assets served at dotkeeper.corbet.ch
-```
+- Work through a pull request; keep changes focused and reviewable.
+- Follow the commit and test rules in `CONTRIBUTING.md`. Do not add
+  tool-generated attribution or coding-assistant credit lines.
+- New behavior needs tests. A bug fix needs a regression test. Refactors must
+  preserve the existing suite.
+- CLI, config, or on-disk breaking changes require a migration path and the
+  appropriate major-version decision.
+- Update `CHANGELOG.md` for user-visible, security, packaging, or release
+  changes. Do not retag a published release; fix forward.
+- Treat documentation as maintained product code: prefer one canonical source,
+  check commands and links against the current tree, and remove duplicated
+  explanations that can drift.
 
-To add a reconcilable property: add it to the config model, add an action type
-in `internal/reconcile/`, implement the idempotent apply path, and pin the
-behaviour with focused tests. See [`docs/architecture.md`](docs/architecture.md)
-for the full narrative and [`docs/adr/`](docs/adr/README.md) for the durable
-decision record.
-
-## Contribution workflow (PR-based)
-
-**`main` is protected — direct pushes are rejected. All non-trivial changes go
-through a pull request.**
-
-1. **Branch off `main`:** `git checkout -b <type>/<short-name>`
-   (e.g. `fix/timer-race`, `docs/setup-guide`).
-2. **Commit** in small, focused steps. Follow
-   [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
-   for the subject (`<type>(<scope>): <imperative summary>`, ≤ 72 chars) and the
-   Tim Pope rules for the body (blank line after subject, wrap at 72, explain
-   *why* not *what*). Types: `feat`, `fix`, `docs`, `refactor`, `test`, `ci`,
-   `build`, `chore`, `deps`, `perf`, `style`.
-3. **No tool-generated attribution.** Do not add `Co-Authored-By:` or other
-   coding-assistant credit lines; they are removed before merge.
-4. **Open a PR:** `gh pr create` or the GitHub UI.
-5. **Green CI:** required checks `build` and `lint` must pass.
-6. **Merge:** squash-merge is the convention (keeps history linear); rewrite the
-   squash body into one coherent message rather than a bullet list of the branch
-   commits. Delete the branch after merge.
-
-### PR size
-
-Prefer small, reviewable PRs (aim for under ~300 lines of diff). PRs over ~500
-lines are likely to be sent back for splitting. If a feature splits into
-independent pieces, split the PRs.
-
-## Reporting issues
-
-- Bugs / features: <https://github.com/julian-corbet/dotkeeper/issues>. For bugs,
-  attach `dotkeeper version`, `go version`, and the output of
-  `dotkeeper doctor --json`.
-- **Security vulnerabilities:** do not open a public issue — use the private
-  channel in [`SECURITY.md`](SECURITY.md).
-
-## License
-
-dotkeeper is AGPL-3.0. By submitting a PR you agree to the CLA in
-[`CONTRIBUTING.md`](CONTRIBUTING.md#contributor-license-agreement-cla). New
-source files carry the standard preamble:
-
-```go
-// Copyright (C) 2026 Julian Corbet
-// SPDX-License-Identifier: AGPL-3.0-only
-```
+Security reports use the private channel in [`SECURITY.md`](SECURITY.md).
+Contributions are licensed under AGPL-3.0 and the CLA in `CONTRIBUTING.md`.
