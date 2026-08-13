@@ -87,17 +87,12 @@ jobs:
         run: go vet -tags noassets ./...
 
       - name: govulncheck
-        # Reachability-aware CVE scan. Fails on any *called* advisory.
-        # Module-only findings are listed in output but don't fail the run.
+        # Reachability-aware CVE scan. Module-only findings are reported, while
+        # reachable advisories fail this required build job.
         # Version pinned for reproducibility; Dependabot bumps it.
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
-          govulncheck -tags noassets ./... || {
-            echo "::warning::govulncheck found advisories — see output above"
-            # Don't hard-fail while SECURITY.md documents known-unresolvable
-            # quic-go advisories blocked on a Syncthing upstream bump.
-            exit 0
-          }
+          govulncheck -tags noassets ./...
 
   lint:
     runs-on: ubuntu-latest
