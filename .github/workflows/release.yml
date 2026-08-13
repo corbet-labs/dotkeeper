@@ -217,6 +217,10 @@ jobs:
   release:
     needs: [build, package]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
     # Creates the GitHub Release and uploads artifacts to it.
     #
     # Uses the PACKAGES_TOKEN PAT (same one homebrew.yml uses) instead
@@ -227,13 +231,15 @@ jobs:
     # The Docker workflow listens on `release: published`, so with
     # GITHUB_TOKEN the v0.8.0 + v0.8.1 releases produced no Docker
     # image — each one had to be manually re-published via a user PAT
-    # to kick docker.yml. PACKAGES_TOKEN is a classic PAT with only
-    # `public_repo` scope; using it makes the release event
+    # to kick docker.yml. Using PACKAGES_TOKEN makes the release event
     # indistinguishable from a human-created one, so docker.yml runs
-    # automatically.
+    # automatically. Because the same secret publishes the downstream
+    # GHCR image, its required classic-PAT scopes are `public_repo` and
+    # `write:packages`.
     #
-    # No `permissions:` block — PACKAGES_TOKEN is a user PAT and
-    # doesn't read the workflow-permission scoping.
+    # PACKAGES_TOKEN is a user PAT and doesn't read the workflow-permission
+    # scoping. The job-scoped GITHUB_TOKEN permissions above are used only to
+    # mint and record Sigstore provenance for the downloaded artifacts.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -253,12 +259,23 @@ jobs:
           cd artifacts
           sha256sum dotkeeper_* > checksums_sha256.txt
 
+      - name: Generate release provenance
+        id: attest
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-checksums: artifacts/checksums_sha256.txt
+
+      - name: Stage provenance bundle
+        env:
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: cp -- "$BUNDLE_PATH" "artifacts/dotkeeper_${GITHUB_REF_NAME}.sigstore.json"
+
       - name: Create release
         env:
           GH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
         run: |
           if [ -z "$GH_TOKEN" ]; then
-            echo "::error::PACKAGES_TOKEN secret is not set. Add a classic PAT with 'public_repo' scope as the repository secret 'PACKAGES_TOKEN'."
+            echo "::error::PACKAGES_TOKEN secret is not set. Add a classic PAT with 'public_repo' and 'write:packages' scopes as the repository secret 'PACKAGES_TOKEN'."
             exit 1
           fi
           VERSION=${GITHUB_REF#refs/tags/}
