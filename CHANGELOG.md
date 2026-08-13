@@ -9,8 +9,8 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Security
 
-- Updated the Go toolchain from 1.26.3 to 1.26.5 to address reachable `crypto/tls` advisories,
-  including GO-2026-5856.
+- Updated the Go toolchain and pinned container builder from 1.26.3 to 1.26.5 to address reachable
+  `crypto/tls` advisories, including GO-2026-5856.
 - Updated `golang.org/x/text` from 0.37.0 to 0.39.0 to address reachable normalization-parser
   advisory GO-2026-5970.
 
