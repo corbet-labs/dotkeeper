@@ -57,8 +57,9 @@ jobs:
       - name: Configure abuild keys
         # abuild requires a signing key. For CI builds we generate a
         # disposable key per run — packages are signed but the
-        # signature isn't relevant to the GitHub release upload (the
-        # release uses its own checksums_sha256.txt).
+        # public key is not distributed as a trusted Alpine key. The
+        # workflow therefore publishes a SHA-256 sidecar for each native
+        # package so users can verify the downloaded artifact explicitly.
         #
         # The disposable public key MUST be copied into /etc/apk/keys/
         # before `abuild -r` runs, otherwise the final "update
@@ -129,7 +130,9 @@ jobs:
           fi
           NAME="dotkeeper_${RELEASE_TAG}_alpine_${{ matrix.alpine_arch }}.apk"
           cp "$APK" "/tmp/${NAME}"
+          (cd /tmp && sha256sum "${NAME}" > "${NAME}.sha256")
           echo "apk_path=/tmp/${NAME}" >> "$GITHUB_OUTPUT"
+          echo "checksum_path=/tmp/${NAME}.sha256" >> "$GITHUB_OUTPUT"
 
       - name: Upload APK to release
         env:
@@ -147,5 +150,6 @@ jobs:
           apk add --no-cache github-cli
           gh release upload "${RELEASE_TAG}" \
             "${{ steps.locate.outputs.apk_path }}" \
+            "${{ steps.locate.outputs.checksum_path }}" \
             --repo "${{ github.repository }}" \
             --clobber
