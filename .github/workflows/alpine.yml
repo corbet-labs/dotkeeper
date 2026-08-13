@@ -3,7 +3,7 @@ name: Alpine
 # Builds dotkeeper as a native Alpine package using `abuild` inside an
 # alpine:edge container, then uploads the resulting `.apk` to the
 # GitHub release. Replaces the nfpm-produced `.apk` from release.yml —
-# native abuild is what `aports/community` expects upstream, and the
+# native abuild is what Alpine's aports tree expects upstream, and the
 # resulting package has the correct musl/Alpine metadata.
 #
 # Triggered when GitHub publishes a release, after release.yml has created it,
@@ -44,8 +44,8 @@ jobs:
     steps:
       - name: Install build deps
         # alpine-sdk is the meta-package that brings abuild + sudo +
-        # build essentials. go is the toolchain; git is needed for
-        # `make build`'s VERSION lookup.
+        # build essentials. go is the toolchain; git fetches the source's
+        # Go modules.
         run: |
           apk add --no-cache alpine-sdk go git curl tar bash
 
@@ -122,8 +122,14 @@ jobs:
 
       - name: Locate built APK
         id: locate
+        # We match `dotkeeper-[0-9]*.apk` rather than `dotkeeper-*.apk` so the
+        # -doc subpackage (`dotkeeper-doc-<ver>.apk`) doesn't get picked up as
+        # the main artifact. The doc subpackage exists for the upstream aports
+        # submission (Alpine convention: docs live in a separate package) but
+        # we don't ship it on the GitHub release.
         run: |
-          APK=$(find /home/builder/packages -type f -name 'dotkeeper-*.apk' | head -1)
+          APK=$(find /home/builder/packages -type f \
+            -name 'dotkeeper-[0-9]*.apk' -print -quit)
           if [ -z "$APK" ]; then
             echo "::error::built APK not found under /home/builder/packages"
             exit 1
