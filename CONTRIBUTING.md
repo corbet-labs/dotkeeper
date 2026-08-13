@@ -48,12 +48,14 @@ dotkeeper status
 
 ## Pull request workflow
 
-**All non-trivial changes go through a pull request.** `main` is protected — direct pushes are rejected.
+**All non-trivial changes go through a pull request.** `main` is protected, and project policy
+requires the pull-request path for maintainers as well as external contributors.
 
 1. **Branch.** `git checkout -b <topic>/<short-name>` (e.g. `fix/timer-race`, `docs/setup-guide`).
 2. **Commit.** Small, focused commits with clear messages. No tool-generated attribution lines.
 3. **Open a PR.** `gh pr create` or the GitHub UI.
-4. **Wait for CI.** Required checks: `build` and `lint`. Both must pass.
+4. **Wait for CI.** Required checks: `build`, `lint`, `multipeer-e2e`, `fuzz-smoke`, and
+   `Analyze (go)`. All must pass.
 5. **Merge.** Squash-merge is the convention (keeps history linear). Delete the branch after merge.
 
 ### PR size
