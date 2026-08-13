@@ -231,10 +231,11 @@ jobs:
     # The Docker workflow listens on `release: published`, so with
     # GITHUB_TOKEN the v0.8.0 + v0.8.1 releases produced no Docker
     # image — each one had to be manually re-published via a user PAT
-    # to kick docker.yml. PACKAGES_TOKEN is a classic PAT with only
-    # `public_repo` scope; using it makes the release event
+    # to kick docker.yml. Using PACKAGES_TOKEN makes the release event
     # indistinguishable from a human-created one, so docker.yml runs
-    # automatically.
+    # automatically. Because the same secret publishes the downstream
+    # GHCR image, its required classic-PAT scopes are `public_repo` and
+    # `write:packages`.
     #
     # PACKAGES_TOKEN is a user PAT and doesn't read the workflow-permission
     # scoping. The job-scoped GITHUB_TOKEN permissions above are used only to
@@ -274,7 +275,7 @@ jobs:
           GH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
         run: |
           if [ -z "$GH_TOKEN" ]; then
-            echo "::error::PACKAGES_TOKEN secret is not set. Add a classic PAT with 'public_repo' scope as the repository secret 'PACKAGES_TOKEN'."
+            echo "::error::PACKAGES_TOKEN secret is not set. Add a classic PAT with 'public_repo' and 'write:packages' scopes as the repository secret 'PACKAGES_TOKEN'."
             exit 1
           fi
           VERSION=${GITHUB_REF#refs/tags/}
