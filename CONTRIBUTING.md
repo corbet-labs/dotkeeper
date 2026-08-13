@@ -213,7 +213,8 @@ Verify:
 - The release contains the expected archives, native packages, and `checksums_sha256.txt`.
 - AUR (`https://aur.archlinux.org/packages/dotkeeper-bin`) reflects the new `pkgver`.
 - The Homebrew formula in `julian-corbet/homebrew-dotkeeper` reflects the new version.
-- The Docker and native Alpine workflows completed successfully.
+- The Docker and native Alpine workflows completed successfully, and the GHCR image can be pulled
+  anonymously (package visibility is configured separately from repository visibility).
 - The `Latest` badge in the README now points at the new tag.
 
 ## Governance
