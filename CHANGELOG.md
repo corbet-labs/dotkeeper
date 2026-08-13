@@ -7,6 +7,8 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.2.9] - 2026-08-13
+
 ### Changed
 
 - Pinned the multipeer test images by digest and aligned them with the supported Go 1.26.5 and
@@ -15,7 +17,7 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Restored native Alpine package publication with `abuild` 3.18 by declaring the package output
-  repository explicitly; both architectures now finish independently, and maintainers can replay
+  repository explicitly; both architecture jobs now run independently, and maintainers can replay
   the workflow for an existing release tag.
 
 ### Security
