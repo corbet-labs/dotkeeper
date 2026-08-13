@@ -7,12 +7,26 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.2.8] - 2026-08-13
+
+### Changed
+
+- Updated `github.com/quic-go/quic-go`, `golang.org/x/crypto`, `golang.org/x/net`,
+  `golang.org/x/sys`, and the pinned GitHub Actions used by CI and release workflows.
+- Updated the container runtime from Alpine 3.23 to the Alpine 3.24 stable series.
+- Moved the project site onto the shared FOSS design system while retaining dotkeeper's theme.
+- Refreshed the OpenSSF Best Practices evidence, supported-version policy, release history, and
+  distribution documentation to match the current project.
+- Added pull-request Docker builds so container/toolchain mismatches are caught before merge.
+
 ### Security
 
 - Updated the Go toolchain and pinned container builder from 1.26.3 to 1.26.5 to address reachable
   `crypto/tls` advisories, including GO-2026-5856.
 - Updated `golang.org/x/text` from 0.37.0 to 0.39.0 to address reachable normalization-parser
   advisory GO-2026-5970.
+- Made reachable `govulncheck` findings fail the required build instead of being reported as
+  non-blocking workflow warnings.
 
 ## [1.2.7] - 2026-05-26
 
