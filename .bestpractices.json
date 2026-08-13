@@ -20,7 +20,7 @@
   "documentation_quick_start_status": "Met",
   "documentation_quick_start_justification": "README.md has install and quick-start sections covering GitHub Releases binaries, Homebrew, AUR, and source installation. Per-platform service-setup instructions are linked from the README.",
   "documentation_current_status": "Met",
-  "documentation_current_justification": "CHANGELOG.md follows Keep a Changelog v1.1.0 and lists every release through v1.2.7. ADRs through 0006 cover the current architecture, including the Syncthing v2 migration.",
+  "documentation_current_justification": "CHANGELOG.md follows Keep a Changelog v1.1.0 and lists every release through v1.2.9. ADRs through 0006 cover the current architecture, including the Syncthing v2 migration.",
   "code_of_conduct_status": "Met",
   "code_of_conduct_justification": "CODE_OF_CONDUCT.md is the Contributor Covenant 2.1, in force since 2026-05-13.",
   "roles_responsibilities_status": "Met",
