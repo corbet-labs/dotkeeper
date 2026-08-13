@@ -7,6 +7,12 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Restored native Alpine package publication with `abuild` 3.18 by declaring the package output
+  repository explicitly; both architectures now finish independently, and maintainers can replay
+  the workflow for an existing release tag.
+
 ## [1.2.8] - 2026-08-13
 
 ### Changed

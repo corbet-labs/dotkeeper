@@ -6,22 +6,32 @@ name: Alpine
 # native abuild is what `aports/community` expects upstream, and the
 # resulting package has the correct musl/Alpine metadata.
 #
-# Triggered on the same `v*` tag push as release.yml. Runs after the
-# normal `release` job has created the release (so we attach to an
-# existing release rather than create one).
+# Triggered when GitHub publishes a release, after release.yml has created it,
+# or replayed manually for an existing release tag. This workflow only attaches
+# native Alpine packages; it never creates or retags a release.
 
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing release tag to rebuild (for example, v1.2.8)'
+        required: true
+        type: string
 
 permissions: {}
 
 jobs:
   apk:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
     container:
       image: alpine:edge
     strategy:
+      # Preserve the result and logs from both architectures when one fails.
+      fail-fast: false
       matrix:
         # Alpine arch names differ from Go's GOARCH; build only the
         # subset we have GitHub-hosted runners for and that map cleanly.
@@ -42,6 +52,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ env.RELEASE_TAG }}
 
       - name: Configure abuild keys
         # abuild requires a signing key. For CI builds we generate a
@@ -61,9 +72,12 @@ jobs:
           openssl genrsa -out /home/builder/.abuild/builder.rsa 4096
           openssl rsa -in /home/builder/.abuild/builder.rsa -pubout \
             -out /home/builder/.abuild/builder.rsa.pub
-          echo 'PACKAGER_PRIVKEY="/home/builder/.abuild/builder.rsa"' \
-            > /home/builder/.abuild/abuild.conf
-          chown -R builder:abuild /home/builder/.abuild
+          cat > /home/builder/.abuild/abuild.conf <<'EOF'
+          PACKAGER_PRIVKEY="/home/builder/.abuild/builder.rsa"
+          REPODEST="/home/builder/packages"
+          EOF
+          mkdir -p /home/builder/packages
+          chown -R builder:abuild /home/builder/.abuild /home/builder/packages
           # Trust the disposable public key for this build only.
           cp /home/builder/.abuild/builder.rsa.pub /etc/apk/keys/
 
@@ -73,7 +87,7 @@ jobs:
         # so abuild can write the resulting .apk into the standard
         # /home/builder/packages location.
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ env.RELEASE_TAG }}
         run: |
           set -eu
           # Strip the leading 'v' from the tag for pkgver.
@@ -108,12 +122,12 @@ jobs:
       - name: Locate built APK
         id: locate
         run: |
-          APK=$(find /home/builder/packages -name 'dotkeeper-*.apk' | head -1)
+          APK=$(find /home/builder/packages -type f -name 'dotkeeper-*.apk' | head -1)
           if [ -z "$APK" ]; then
             echo "::error::built APK not found under /home/builder/packages"
             exit 1
           fi
-          NAME="dotkeeper_${{ github.event.release.tag_name }}_alpine_${{ matrix.alpine_arch }}.apk"
+          NAME="dotkeeper_${RELEASE_TAG}_alpine_${{ matrix.alpine_arch }}.apk"
           cp "$APK" "/tmp/${NAME}"
           echo "apk_path=/tmp/${NAME}" >> "$GITHUB_OUTPUT"
 
@@ -131,7 +145,7 @@ jobs:
           fi
           # gh CLI in the alpine:edge container — install via apk.
           apk add --no-cache github-cli
-          gh release upload "${{ github.event.release.tag_name }}" \
+          gh release upload "${RELEASE_TAG}" \
             "${{ steps.locate.outputs.apk_path }}" \
             --repo "${{ github.repository }}" \
             --clobber
