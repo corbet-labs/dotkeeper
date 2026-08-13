@@ -7,6 +7,8 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.2.10] - 2026-08-13
+
 ### Added
 
 - Added a concise contributor-agent guide and a spec-conformant `/llms.txt` discovery map for
@@ -2083,7 +2085,51 @@ These changes are silent: same behaviour, fewer cycles per reconcile.
 - CI: bumped `actions/upload-artifact`, `actions/download-artifact`, and
   `actions/setup-go` to current stable versions.
 
-[Unreleased]: https://github.com/julian-corbet/dotkeeper/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.10...HEAD
+[1.2.10]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.9...v1.2.10
+[1.2.9]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.8...v1.2.9
+[1.2.8]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.7...v1.2.8
+[1.2.7]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.6...v1.2.7
+[1.2.6]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.5...v1.2.6
+[1.2.5]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.4...v1.2.5
+[1.2.4]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.3...v1.2.4
+[1.2.3]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.2...v1.2.3
+[1.2.2]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/julian-corbet/dotkeeper/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.23...v1.2.0
+[1.1.23]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.22...v1.1.23
+[1.1.22]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.21...v1.1.22
+[1.1.21]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.20...v1.1.21
+[1.1.20]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.19...v1.1.20
+[1.1.19]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.18...v1.1.19
+[1.1.18]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.17...v1.1.18
+[1.1.17]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.16...v1.1.17
+[1.1.16]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.15...v1.1.16
+[1.1.15]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.14...v1.1.15
+[1.1.14]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.13...v1.1.14
+[1.1.13]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.12...v1.1.13
+[1.1.12]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.11...v1.1.12
+[1.1.11]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.10...v1.1.11
+[1.1.10]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.9...v1.1.10
+[1.1.9]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.8...v1.1.9
+[1.1.8]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.7...v1.1.8
+[1.1.7]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.6...v1.1.7
+[1.1.6]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.5...v1.1.6
+[1.1.5]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.4...v1.1.5
+[1.1.4]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.3...v1.1.4
+[1.1.3]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/julian-corbet/dotkeeper/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/julian-corbet/dotkeeper/compare/v1.0.3...v1.1.0
+[1.0.3]: https://github.com/julian-corbet/dotkeeper/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/julian-corbet/dotkeeper/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/julian-corbet/dotkeeper/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/julian-corbet/dotkeeper/compare/v0.9.1...v1.0.0
+[0.9.1]: https://github.com/julian-corbet/dotkeeper/compare/v0.9.0...v0.9.1
+[0.9.0]: https://github.com/julian-corbet/dotkeeper/compare/v0.8.2...v0.9.0
+[0.8.2]: https://github.com/julian-corbet/dotkeeper/compare/v0.8.1...v0.8.2
+[0.8.1]: https://github.com/julian-corbet/dotkeeper/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/julian-corbet/dotkeeper/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/julian-corbet/dotkeeper/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/julian-corbet/dotkeeper/compare/v0.5.0...v0.6.1
 [0.5.0]: https://github.com/julian-corbet/dotkeeper/compare/v0.4.0...v0.5.0
