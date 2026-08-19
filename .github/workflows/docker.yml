@@ -70,7 +70,7 @@ jobs:
         # write:packages scope. It authorizes publication to the maintainer's
         # user namespace independently of the repository workflow token. The
         # same secret is used by homebrew.yml.
-        uses: docker/login-action@371161bbe7024a29a25c5e19bfcbc0804fe9ad2c # v4.5.2
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: ghcr.io
           username: julian-corbet
