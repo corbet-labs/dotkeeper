@@ -7,6 +7,13 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- Moved the pinned Go toolchain and container builder from 1.26.5 to 1.26.6, clearing six
+  reachable standard-library advisories (net/url path resolution, post-handshake message limits
+  in crypto/tls, the unencrypted HTTP/2 header timeout, and recursion-depth guards in
+  encoding/xml, encoding/asn1, and the IDNA punycode path).
+
 ### Changed
 
 - Synchronized the checked-in OpenSSF Best Practices evidence with the verified v1.2.10 release
