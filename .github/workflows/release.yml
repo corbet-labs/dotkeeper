@@ -16,7 +16,15 @@ permissions: {}
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Each leg is ~1min; 10 is the floor. A wedged cross-compile fails here
+    # instead of holding a runner slot for the 6h default.
+    timeout-minutes: 10
     strategy:
+      # 16 targets. GitHub's default (fail-fast: true) cancels the other 15 the
+      # instant one platform breaks, so a single bad GOARCH used to leave the
+      # release with no evidence about anything else. Every target reports its
+      # own verdict now.
+      fail-fast: false
       matrix:
         include:
           # Linux
@@ -134,9 +142,15 @@ jobs:
             dotkeeper_*.zip
 
   package:
+    # Real dependency: this job downloads the `dist-*` artifacts build uploads.
     needs: build
     runs-on: ubuntu-latest
+    # Each leg is ~15-20s; the nFPM download is the only network step.
+    timeout-minutes: 10
     strategy:
+      # One broken packager (deb/rpm/apk/archlinux) must not erase the other
+      # three architectures' results.
+      fail-fast: false
       matrix:
         include:
           - goarch: amd64
@@ -215,8 +229,11 @@ jobs:
             dotkeeper_*.pkg.tar.zst
 
   release:
+    # Real dependency: consumes both jobs' uploaded artifacts.
     needs: [build, package]
     runs-on: ubuntu-latest
+    # Observed ~20s; the attestation call is the only slow part.
+    timeout-minutes: 15
     permissions:
       contents: read
       id-token: write

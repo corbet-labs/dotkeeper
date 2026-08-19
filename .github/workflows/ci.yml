@@ -18,6 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     # Skip auto-sync commits from dotkeeper's git timer
     if: "!startsWith(github.event.head_commit.message, 'auto:')"
+    # ~3x the observed steady-state duration (build+test+vet+govulncheck runs
+    # 4-5.5min). A hung step fails the job instead of squatting on a runner
+    # for the account-wide 6h default.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -97,6 +101,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'auto:')"
+    # Observed 25-45s; golangci-lint has its own --timeout 5m below.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -133,9 +139,16 @@ jobs:
     # by the normal test job; this job surfaces *new* crashes that only show
     # up under randomized input.
     runs-on: ubuntu-latest
-    needs: build
+    # Deliberately NOT `needs: build`. This job checks out and builds
+    # everything it needs itself, so gating it on `build` only meant a
+    # compile error in `build` erased the fuzz result too. Independent gates
+    # must each report their own verdict.
     if: "!startsWith(github.event.head_commit.message, 'auto:')"
-    timeout-minutes: 5
+    # Observed ~2min. Budget raised from 5 so that a genuinely failing target
+    # (the loop below now runs every target instead of stopping at the first
+    # failure) still fits, and so adding a fuzz target doesn't silently turn
+    # the budget into a flake source.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -153,27 +166,42 @@ jobs:
         # completion, and a worker still finishing an exec at the 20s
         # mark trips the failure even though no real bug was found.
         # 30s leaves enough slack that legitimate completions land
-        # inside the budget while keeping the smoke job under 5min
-        # total (~6 targets * 30s + overhead).
+        # inside the budget (~6 targets * 30s + overhead).
+        #
+        # Every target runs even when an earlier one fails: one broken parser
+        # must not hide the state of the other five. Failures are collected
+        # and the job still exits non-zero at the end, naming each one.
         run: |
-          set -e
+          set -u
+          failed=""
           for pkg in $(go list -tags noassets ./...); do
             # `go test -list` enumerates fuzz targets in the package.
             fuzz_targets=$(go test -tags noassets -list '^Fuzz' "$pkg" 2>/dev/null | grep '^Fuzz' || true)
             for target in $fuzz_targets; do
               echo "::group::fuzz $pkg $target"
-              go test -tags noassets -run='^$' -fuzz="^${target}$" -fuzztime=30s "$pkg"
+              if ! go test -tags noassets -run='^$' -fuzz="^${target}$" -fuzztime=30s "$pkg"; then
+                echo "::error::fuzz target ${target} failed in ${pkg}"
+                failed="${failed} ${pkg}:${target}"
+              fi
               echo "::endgroup::"
             done
           done
+          if [ -n "$failed" ]; then
+            echo "::error::failing fuzz targets:${failed}"
+            exit 1
+          fi
 
   multipeer-e2e:
     # Two-peer Syncthing fixture defined in tests/multipeer/.
     # Each Go test brings up its own compose project; the cleanup step prunes
     # any leftovers from a panic or test-runner kill.
     runs-on: ubuntu-latest
-    needs: build
+    # Deliberately NOT `needs: build`. This job builds its own image and test
+    # binary; chaining it behind `build` only hid the e2e verdict whenever the
+    # unit-test job was red.
     if: "!startsWith(github.event.head_commit.message, 'auto:')"
+    # `go test -timeout 25m` below is the inner bound; 30 leaves room for the
+    # image build and still kills a wedged Docker daemon.
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

@@ -18,6 +18,9 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Synchronized the checked-in OpenSSF Best Practices evidence with the verified v1.2.10 release
   and the project's conservative maintainer determinations.
+- Gave every CI job an explicit time budget, made both release build matrices report each target
+  independently instead of cancelling their siblings, and let the fuzz smoke job run every target
+  before failing so one broken parser no longer hides the rest.
 
 ## [1.2.10] - 2026-08-13
 

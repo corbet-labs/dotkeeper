@@ -39,6 +39,9 @@ permissions: read-all
 jobs:
   build:
     runs-on: ubuntu-latest
+    # ~3x the observed 10-11min. The linux/arm64 leg runs under QEMU, which is
+    # where a hang would show up; without a bound it would sit for 6h.
+    timeout-minutes: 35
     # release / workflow_dispatch: build AND push to GHCR.
     # Pull requests and pushes to main: build only (smoke-test the Dockerfile
     # without bumping :latest off every commit — :latest tracks the most

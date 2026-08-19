@@ -25,6 +25,9 @@ permissions: {}
 jobs:
   apk:
     runs-on: ubuntu-latest
+    # Observed ~1min per arch; the extra headroom covers apk/network variance
+    # on the cross-built aarch64 leg.
+    timeout-minutes: 15
     env:
       RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
     container:

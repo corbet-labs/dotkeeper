@@ -18,6 +18,8 @@ jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
+    # Observed ~1.3min; CodeQL database builds are the variable part.
+    timeout-minutes: 20
     # Skip auto-sync commits from dotkeeper's git timer
     if: "!startsWith(github.event.head_commit.message, 'auto:')"
     permissions:

@@ -13,6 +13,8 @@ jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-latest
+    # Observed ~40s; Scorecard's own API calls are the only slow part.
+    timeout-minutes: 15
     permissions:
       # SARIF upload to Code Scanning
       security-events: write

@@ -23,6 +23,9 @@ permissions: read-all
 jobs:
   homebrew:
     runs-on: ubuntu-latest
+    # Same shape as aur.yml: the release-asset poll is a deliberate 15min wait,
+    # so the bound sits above it. Steady-state runs finish in ~2min.
+    timeout-minutes: 25
     steps:
       - name: Resolve version
         id: ver

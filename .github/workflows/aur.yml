@@ -24,6 +24,10 @@ permissions: read-all
 jobs:
   aur:
     runs-on: ubuntu-latest
+    # The "wait for release assets" step below polls for up to 15min by design,
+    # so the job bound has to clear that: 25 = 15min poll + build/push headroom.
+    # Steady-state runs finish in ~2.5min.
+    timeout-minutes: 25
     steps:
       - name: Resolve version
         id: ver
