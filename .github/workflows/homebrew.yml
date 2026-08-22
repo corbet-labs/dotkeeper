@@ -5,7 +5,7 @@ name: Publish to Homebrew tap
 # new version + SHA256s and pushes it.
 #
 # Needs: PACKAGES_TOKEN secret — classic PAT with 'public_repo' scope on an
-# account that can write to julian-corbet/homebrew-dotkeeper.
+# account that can write to corbet-labs/homebrew-dotkeeper.
 
 on:
   push:
@@ -75,7 +75,7 @@ jobs:
       - name: Check out tap repo
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: julian-corbet/homebrew-dotkeeper
+          repository: corbet-labs/homebrew-dotkeeper
           token: ${{ secrets.PACKAGES_TOKEN }}
           path: tap
 
@@ -145,10 +145,14 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          if git diff --quiet; then
+          # Stage FIRST, then compare the index. `git diff --quiet` alone
+          # ignores untracked files, so a formula that is not yet tracked —
+          # any re-scaffolded tap — reads as "no changes" and this job exits
+          # green having pushed nothing.
+          git add Formula/dotkeeper.rb
+          if git diff --cached --quiet; then
             echo "No changes — formula already at ${VERSION}"
           else
-            git add Formula/dotkeeper.rb
             git commit -m "formula: bump dotkeeper to ${VERSION}"
             git push origin main
           fi
