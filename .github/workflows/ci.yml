@@ -45,6 +45,9 @@ jobs:
         run: go build -tags noassets ./cmd/dotkeeper
 
       - name: Cross-compile sanity (windows/darwin)
+        # Reports even if an earlier step failed: this compiles from the
+        # checked-out source and asserts something no other step does.
+        if: '!cancelled()'
         # dotkeeper supports Linux, macOS, and Windows. The host-arch build
         # above proves linux/amd64; this step proves the file-locking shim
         # and other platform-specific code compiles for darwin and windows.
@@ -57,6 +60,10 @@ jobs:
           GOOS=windows GOARCH=amd64 go build -tags noassets ./cmd/dotkeeper
 
       - name: Test with coverage (race-enabled)
+        # Reports even if an earlier step failed: it builds its own test
+        # binaries, so a darwin-only compile error upstream must not erase
+        # the verdict of the entire test suite.
+        if: '!cancelled()'
         # -race runs the Go data-race detector. Cheap on a single-package CI
         # run and surfaces concurrent-write bugs before they hit production —
         # the state.toml race fixed in PR #7 was exactly the class of bug
@@ -69,6 +76,10 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload coverage profile
+        # Deliberately WITHOUT `if: '!cancelled()'`. Unlike the verification
+        # steps around it, this one consumes coverage.out written by the step
+        # above; if that step did not run there is nothing to upload, and an
+        # upload of a stale or absent profile is worse than no upload.
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-${{ github.run_id }}
@@ -76,6 +87,10 @@ jobs:
           retention-days: 30
 
       - name: Perf-budget gate (non-race)
+        # Reports even if an earlier step failed. This is the step a red test
+        # run used to hide: the budgets are a separate contract from
+        # correctness, and one broken test must not leave them unmeasured.
+        if: '!cancelled()'
         # Hot-path benchmarks have ns/op budgets in
         # internal/reconcile/perf_budget_test.go. They skip themselves under
         # -race because the detector adds 5–15× overhead and under
@@ -88,9 +103,16 @@ jobs:
         run: go test -tags noassets -run TestPerfBudgets ./internal/reconcile/
 
       - name: Vet
+        # Reports even if an earlier step failed; vet reads the source and
+        # depends on nothing any previous step produced.
+        if: '!cancelled()'
         run: go vet -tags noassets ./...
 
       - name: govulncheck
+        # Reports even if an earlier step failed; the CVE verdict is
+        # independent of whether the tests pass, and is exactly the thing you
+        # least want withheld while the build is red.
+        if: '!cancelled()'
         # Reachability-aware CVE scan. Module-only findings are reported, while
         # reachable advisories fail this required build job.
         # Version pinned for reproducibility; Dependabot bumps it.
@@ -171,21 +193,49 @@ jobs:
         # Every target runs even when an earlier one fails: one broken parser
         # must not hide the state of the other five. Failures are collected
         # and the job still exits non-zero at the end, naming each one.
+        #
+        # A run that fuzzed nothing must never report success. The enumeration
+        # below happens first precisely so the count can be checked: an empty
+        # list is exactly what a wrong package path, a build that no longer
+        # compiles, or a renamed Fuzz* function looks like, and the previous
+        # shape turned all three into a green job that had tested nothing.
         run: |
           set -u
-          failed=""
-          for pkg in $(go list -tags noassets ./...); do
-            # `go test -list` enumerates fuzz targets in the package.
-            fuzz_targets=$(go test -tags noassets -list '^Fuzz' "$pkg" 2>/dev/null | grep '^Fuzz' || true)
-            for target in $fuzz_targets; do
-              echo "::group::fuzz $pkg $target"
-              if ! go test -tags noassets -run='^$' -fuzz="^${target}$" -fuzztime=30s "$pkg"; then
-                echo "::error::fuzz target ${target} failed in ${pkg}"
-                failed="${failed} ${pkg}:${target}"
-              fi
-              echo "::endgroup::"
+          pkgs=$(go list -tags noassets ./...)
+          targets=""
+          for pkg in $pkgs; do
+            # `go test -list` enumerates fuzz targets in the package. The
+            # `|| true` is here solely so grep's no-match exit status cannot
+            # kill the step; the zero-target floor below is what makes
+            # swallowing that status safe.
+            for target in $(go test -tags noassets -list '^Fuzz' "$pkg" 2>/dev/null | grep '^Fuzz' || true); do
+              targets="${targets}${targets:+ }${pkg}=${target}"
             done
           done
+
+          if [ -z "$targets" ]; then
+            # A batch that ran nothing has proven nothing; never report that as success.
+            echo "::error::fuzz-smoke: no fuzz targets were found, so no units were run"
+            echo "packages searched:" >&2
+            echo "$pkgs" | sed 's/^/  - /' >&2
+            exit 1
+          fi
+
+          failed=""
+          total=0
+          for entry in $targets; do
+            pkg=${entry%=*}
+            target=${entry#*=}
+            total=$((total + 1))
+            echo "::group::fuzz $pkg $target"
+            if ! go test -tags noassets -run='^$' -fuzz="^${target}$" -fuzztime=30s "$pkg"; then
+              echo "::error::fuzz target ${target} failed in ${pkg}"
+              failed="${failed} ${pkg}:${target}"
+            fi
+            echo "::endgroup::"
+          done
+
+          echo "=== ${total} fuzz target(s) run ==="
           if [ -n "$failed" ]; then
             echo "::error::failing fuzz targets:${failed}"
             exit 1

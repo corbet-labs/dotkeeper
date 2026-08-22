@@ -145,10 +145,14 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          if [ -z "$(git status --porcelain -- Formula/dotkeeper.rb)" ]; then
+          # Stage FIRST, then compare the index. `git diff --quiet` alone
+          # ignores untracked files, so a formula that is not yet tracked —
+          # any re-scaffolded tap — reads as "no changes" and this job exits
+          # green having pushed nothing.
+          git add Formula/dotkeeper.rb
+          if git diff --cached --quiet; then
             echo "No changes — formula already at ${VERSION}"
           else
-            git add Formula/dotkeeper.rb
             git commit -m "formula: bump dotkeeper to ${VERSION}"
             git push origin main
           fi
