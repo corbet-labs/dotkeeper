@@ -21,19 +21,19 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/julian-corbet/dotkeeper/internal/activity"
-	"github.com/julian-corbet/dotkeeper/internal/benchmarker"
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/conflict"
-	"github.com/julian-corbet/dotkeeper/internal/discovery"
-	"github.com/julian-corbet/dotkeeper/internal/doctor"
-	"github.com/julian-corbet/dotkeeper/internal/procnice"
-	"github.com/julian-corbet/dotkeeper/internal/reconcile"
-	"github.com/julian-corbet/dotkeeper/internal/service"
-	"github.com/julian-corbet/dotkeeper/internal/stclient"
-	"github.com/julian-corbet/dotkeeper/internal/stengine"
-	"github.com/julian-corbet/dotkeeper/internal/transport"
-	"github.com/julian-corbet/dotkeeper/internal/watchhealth"
+	"github.com/corbet-labs/dotkeeper/internal/activity"
+	"github.com/corbet-labs/dotkeeper/internal/benchmarker"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/conflict"
+	"github.com/corbet-labs/dotkeeper/internal/discovery"
+	"github.com/corbet-labs/dotkeeper/internal/doctor"
+	"github.com/corbet-labs/dotkeeper/internal/procnice"
+	"github.com/corbet-labs/dotkeeper/internal/reconcile"
+	"github.com/corbet-labs/dotkeeper/internal/service"
+	"github.com/corbet-labs/dotkeeper/internal/stclient"
+	"github.com/corbet-labs/dotkeeper/internal/stengine"
+	"github.com/corbet-labs/dotkeeper/internal/transport"
+	"github.com/corbet-labs/dotkeeper/internal/watchhealth"
 )
 
 // Compile-time conformance: stclient.Client must satisfy the

@@ -10,8 +10,8 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/gitident"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/gitident"
 	"github.com/spf13/cobra"
 )
 

@@ -53,7 +53,7 @@ type RepoGitConfig struct {
 
 	// Canonical is the normalised identity form of Remote, produced
 	// by internal/gitident.Canonical. Example:
-	// "github.com/julian-corbet/dotkeeper" regardless of whether the
+	// "github.com/corbet-labs/dotkeeper" regardless of whether the
 	// underlying Remote was the HTTPS, SCP, or ssh:// variant.
 	Canonical string `toml:"canonical"`
 }
@@ -125,7 +125,7 @@ func LoadRepoConfigV2(repoRoot string) (*RepoConfigV2, error) {
 // written with mode 0644 and excluded from Git/Syncthing by dotkeeper.
 func WriteRepoConfigV2(repoRoot string, cfg *RepoConfigV2) error {
 	var b strings.Builder
-	b.WriteString("# Managed by dotkeeper - https://github.com/julian-corbet/dotkeeper\n")
+	b.WriteString("# Managed by dotkeeper - https://github.com/corbet-labs/dotkeeper\n")
 	b.WriteString("# Local machine state. Do not commit or sync this file.\n\n")
 
 	fmt.Fprintf(&b, "schema_version = %d\n\n", cfg.SchemaVersion)

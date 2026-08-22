@@ -49,7 +49,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/transport"
+	"github.com/corbet-labs/dotkeeper/internal/transport"
 )
 
 const (

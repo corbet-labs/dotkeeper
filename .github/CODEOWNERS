@@ -2,12 +2,12 @@
 # Syntax: https://docs.github.com/en/repositories/managing-your-repositories-settings-and-features/customizing-your-repository/about-code-owners
 
 # Default owner for everything.
-* @julian-corbet
+* @corbet-labs/maintainers
 
 # Security-sensitive areas — same owner, flagged explicitly so future
 # maintainers see they deserve extra scrutiny during review.
-/SECURITY.md                      @julian-corbet
-/.github/                         @julian-corbet
-/internal/stengine/               @julian-corbet
-/internal/stclient/               @julian-corbet
-/internal/gitsync/                @julian-corbet
+/SECURITY.md                      @corbet-labs/maintainers
+/.github/                         @corbet-labs/maintainers
+/internal/stengine/               @corbet-labs/maintainers
+/internal/stclient/               @corbet-labs/maintainers
+/internal/gitsync/                @corbet-labs/maintainers

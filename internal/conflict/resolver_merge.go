@@ -13,7 +13,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // textDetectionWindow is the number of leading bytes scanned for NUL to

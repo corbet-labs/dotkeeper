@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // TestWalkScanRootStopsAtRepoRoot asserts the canonical walk behaviour:

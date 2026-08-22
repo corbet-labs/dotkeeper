@@ -8,8 +8,8 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/stclient"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/stclient"
 )
 
 // presenceQuerier is the narrow seam the peer-presence tracker

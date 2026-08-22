@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // Desired represents the declarative configuration for this machine: what
@@ -446,7 +446,7 @@ type AddSyncthingFolder struct {
 	// Label is the human-readable identifier Syncthing displays
 	// for this folder. When the repo is git-backed dotkeeper sets
 	// this to the canonical-URL identity (e.g.
-	// "github.com/julian-corbet/dotkeeper") so the Syncthing UI
+	// "github.com/corbet-labs/dotkeeper") so the Syncthing UI
 	// and the dotkeeper discovery surface both show something
 	// meaningful. Empty falls back to FolderID (legacy behaviour
 	// — non-git folders or pre-v1.2 installs).

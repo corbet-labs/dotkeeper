@@ -6,19 +6,19 @@ dotkeeper is an end-user command-line application, not a Go library API. Start w
 
 ## Start here
 
-- [README](https://raw.githubusercontent.com/julian-corbet/dotkeeper/main/README.md): Product scope, installation, quick start, command reference, and current release-line status.
-- [Architecture](https://raw.githubusercontent.com/julian-corbet/dotkeeper/main/docs/architecture.md): Reconciler model, state ownership, discovery, and contributor map.
+- [README](https://raw.githubusercontent.com/corbet-labs/dotkeeper/main/README.md): Product scope, installation, quick start, command reference, and current release-line status.
+- [Architecture](https://raw.githubusercontent.com/corbet-labs/dotkeeper/main/docs/architecture.md): Reconciler model, state ownership, discovery, and contributor map.
 - [Project documentation](https://dotkeeper.corbet.ch/docs): Human-facing product explanation and configuration examples.
 
 ## Contributing
 
-- [Agent quick reference](https://raw.githubusercontent.com/julian-corbet/dotkeeper/main/AGENTS.md): Build constraints, repository map, required checks, and change discipline.
-- [Contribution guide](https://raw.githubusercontent.com/julian-corbet/dotkeeper/main/CONTRIBUTING.md): Authoritative development, test, pull-request, commit, and release policy.
-- [Architecture decision records](https://raw.githubusercontent.com/julian-corbet/dotkeeper/main/docs/adr/README.md): Index of durable design decisions and their status.
-- [Security policy](https://raw.githubusercontent.com/julian-corbet/dotkeeper/main/SECURITY.md): Supported versions and private vulnerability-reporting channel.
+- [Agent quick reference](https://raw.githubusercontent.com/corbet-labs/dotkeeper/main/AGENTS.md): Build constraints, repository map, required checks, and change discipline.
+- [Contribution guide](https://raw.githubusercontent.com/corbet-labs/dotkeeper/main/CONTRIBUTING.md): Authoritative development, test, pull-request, commit, and release policy.
+- [Architecture decision records](https://raw.githubusercontent.com/corbet-labs/dotkeeper/main/docs/adr/README.md): Index of durable design decisions and their status.
+- [Security policy](https://raw.githubusercontent.com/corbet-labs/dotkeeper/main/SECURITY.md): Supported versions and private vulnerability-reporting channel.
 
 ## Optional
 
-- [Changelog](https://raw.githubusercontent.com/julian-corbet/dotkeeper/main/CHANGELOG.md): Versioned user-visible, packaging, and security changes.
-- [Releases](https://github.com/julian-corbet/dotkeeper/releases): Versioned source tags and downloadable artifacts.
-- [Go package index](https://pkg.go.dev/github.com/julian-corbet/dotkeeper): Module and package documentation generated from the source tree.
+- [Changelog](https://raw.githubusercontent.com/corbet-labs/dotkeeper/main/CHANGELOG.md): Versioned user-visible, packaging, and security changes.
+- [Releases](https://github.com/corbet-labs/dotkeeper/releases): Versioned source tags and downloadable artifacts.
+- [Go package index](https://pkg.go.dev/github.com/corbet-labs/dotkeeper): Module and package documentation generated from the source tree.

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/julian-corbet/dotkeeper/internal/testutil"
+	"github.com/corbet-labs/dotkeeper/internal/testutil"
 )
 
 // TestSetupCreatesDirectories verifies that Setup creates the config

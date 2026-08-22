@@ -16,7 +16,7 @@
   "documentation_architecture_status": "Met",
   "documentation_architecture_justification": "docs/architecture.md is the readable narrative; 6 ADRs (docs/adr/0001-…0006-…) document the load-bearing decisions through the Syncthing v2 migration. ADR 0005 covers the atomic-write + flock locking architecture introduced in v0.7.0.",
   "documentation_security_status": "Met",
-  "documentation_security_justification": "SECURITY.md describes the vulnerability disclosure process via GitHub Security Advisories (https://github.com/julian-corbet/dotkeeper/security/advisories/new), the 48-hour acknowledgement window, and the credit policy for reporters.",
+  "documentation_security_justification": "SECURITY.md describes the vulnerability disclosure process via GitHub Security Advisories (https://github.com/corbet-labs/dotkeeper/security/advisories/new), the 48-hour acknowledgement window, and the credit policy for reporters.",
   "documentation_quick_start_status": "Met",
   "documentation_quick_start_justification": "README.md has install and quick-start sections covering GitHub Releases binaries, Homebrew, AUR, and source installation. Per-platform service-setup instructions are linked from the README.",
   "documentation_current_status": "Met",
@@ -56,5 +56,5 @@
   "external_dependencies_status": "Met",
   "external_dependencies_justification": "go.mod and go.sum are the language-standard machine-processable dependency inventory. Dependabot monitors the module graph and the required build runs govulncheck against reachable dependency vulnerabilities.",
   "name": "dotkeeper",
-  "repo_url": "https://github.com/julian-corbet/dotkeeper"
+  "repo_url": "https://github.com/corbet-labs/dotkeeper"
 }

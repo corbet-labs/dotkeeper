@@ -46,7 +46,7 @@ jobs:
           # release.yml runs in parallel; assets appear after all build jobs
           # finish. Poll the release endpoint until checksums_sha256.txt exists.
           for i in $(seq 1 60); do
-            if gh release view "v${VERSION}" --repo julian-corbet/dotkeeper \
+            if gh release view "v${VERSION}" --repo corbet-labs/dotkeeper \
                 --json assets -q '.assets[].name' 2>/dev/null | grep -q '^checksums_sha256.txt$'; then
               echo "release assets ready"
               exit 0
@@ -62,7 +62,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.ver.outputs.version }}
         run: |
-          gh release download "v${VERSION}" --repo julian-corbet/dotkeeper \
+          gh release download "v${VERSION}" --repo corbet-labs/dotkeeper \
             --pattern 'checksums_sha256.txt' --dir /tmp
 
       - name: Set up AUR SSH
@@ -116,8 +116,8 @@ jobs:
           depends=('git')
           provides=('dotkeeper')
           conflicts=('dotkeeper' 'dotkeeper-git')
-          source_x86_64=("dotkeeper_\${pkgver}_linux_amd64.tar.gz::https://github.com/julian-corbet/dotkeeper/releases/download/v\${pkgver}/dotkeeper_\${pkgver}_linux_amd64.tar.gz")
-          source_aarch64=("dotkeeper_\${pkgver}_linux_arm64.tar.gz::https://github.com/julian-corbet/dotkeeper/releases/download/v\${pkgver}/dotkeeper_\${pkgver}_linux_arm64.tar.gz")
+          source_x86_64=("dotkeeper_\${pkgver}_linux_amd64.tar.gz::https://github.com/corbet-labs/dotkeeper/releases/download/v\${pkgver}/dotkeeper_\${pkgver}_linux_amd64.tar.gz")
+          source_aarch64=("dotkeeper_\${pkgver}_linux_arm64.tar.gz::https://github.com/corbet-labs/dotkeeper/releases/download/v\${pkgver}/dotkeeper_\${pkgver}_linux_arm64.tar.gz")
           sha256sums_x86_64=('${SHA_AMD64}')
           sha256sums_aarch64=('${SHA_ARM64}')
 
@@ -133,6 +133,7 @@ jobs:
           }
           PKGEOF
 
+          TAB=$(printf '\t')
           cat > .SRCINFO <<SRCEOF
           pkgbase = dotkeeper-bin
           	pkgdesc = P2P file sync with git history — embedded Syncthing + staggered git auto-backup
@@ -146,15 +147,15 @@ jobs:
           	provides = dotkeeper
           	conflicts = dotkeeper
           	conflicts = dotkeeper-git
-          	source_x86_64 = dotkeeper_${VERSION}_linux_amd64.tar.gz::https://github.com/julian-corbet/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_linux_amd64.tar.gz
+          ${TAB}source_x86_64 = dotkeeper_${VERSION}_linux_amd64.tar.gz::https://github.com/corbet-labs/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_linux_amd64.tar.gz
           	sha256sums_x86_64 = ${SHA_AMD64}
-          	source_aarch64 = dotkeeper_${VERSION}_linux_arm64.tar.gz::https://github.com/julian-corbet/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_linux_arm64.tar.gz
+          ${TAB}source_aarch64 = dotkeeper_${VERSION}_linux_arm64.tar.gz::https://github.com/corbet-labs/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_linux_arm64.tar.gz
           	sha256sums_aarch64 = ${SHA_ARM64}
 
           pkgname = dotkeeper-bin
           SRCEOF
 
-          if git diff --quiet; then
+          if [ -z "$(git status --porcelain -- PKGBUILD .SRCINFO)" ]; then
             echo "No changes — dotkeeper-bin already at ${VERSION}"
           else
             git add PKGBUILD .SRCINFO
@@ -187,7 +188,7 @@ jobs:
           makedepends=('go' 'git')
           provides=('dotkeeper')
           conflicts=('dotkeeper' 'dotkeeper-bin')
-          source=("\${_gitname}::git+https://github.com/julian-corbet/dotkeeper.git")
+          source=("\${_gitname}::git+https://github.com/corbet-labs/dotkeeper.git")
           sha256sums=('SKIP')
 
           pkgver() {
@@ -213,6 +214,7 @@ jobs:
           }
           PKGEOF
 
+          TAB=$(printf '\t')
           cat > .SRCINFO <<SRCEOF
           pkgbase = dotkeeper-git
           	pkgdesc = P2P file sync with git history — embedded Syncthing + staggered git auto-backup (bleeding-edge, builds from main)
@@ -228,13 +230,13 @@ jobs:
           	provides = dotkeeper
           	conflicts = dotkeeper
           	conflicts = dotkeeper-bin
-          	source = dotkeeper::git+https://github.com/julian-corbet/dotkeeper.git
+          ${TAB}source = dotkeeper::git+https://github.com/corbet-labs/dotkeeper.git
           	sha256sums = SKIP
 
           pkgname = dotkeeper-git
           SRCEOF
 
-          if git diff --quiet; then
+          if [ -z "$(git status --porcelain -- PKGBUILD .SRCINFO)" ]; then
             echo "No changes — dotkeeper-git already at ${VERSION}"
           else
             git add PKGBUILD .SRCINFO

@@ -5,7 +5,7 @@ section: utils
 priority: optional
 maintainer: Julian Corbet
 description: P2P repo sync with git history — embedded Syncthing + git auto-sync
-homepage: https://github.com/julian-corbet/dotkeeper
+homepage: https://github.com/corbet-labs/dotkeeper
 license: AGPL-3.0
 vendor: Julian Corbet
 

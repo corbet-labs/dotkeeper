@@ -3,7 +3,7 @@
 #
 # Usage:
 #   # Git sync only (no Syncthing daemon)
-#   docker run -v ~/.config/dotkeeper:/config -v ~/repos:/repos ghcr.io/julian-corbet/dotkeeper sync
+#   docker run -v ~/.config/dotkeeper:/config -v ~/repos:/repos ghcr.io/corbet-labs/dotkeeper sync
 #
 #   # Full daemon with Syncthing
 #   docker run -d --name dotkeeper \
@@ -12,7 +12,7 @@
 #     -v ~/repos:/repos \
 #     -p 12000:12000/tcp -p 12000:12000/udp \
 #     -p 11027:11027/udp \
-#     ghcr.io/julian-corbet/dotkeeper start
+#     ghcr.io/corbet-labs/dotkeeper start
 
 # --- Build stage ---
 FROM golang:1.26.6-alpine@sha256:3889b425f035be855a72fb4755265311293b6d414521f0a519d819df32222d83 AS build

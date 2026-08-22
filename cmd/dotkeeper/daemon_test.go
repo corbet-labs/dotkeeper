@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/reconcile"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/reconcile"
 )
 
 // stubReconciler is an in-process stand-in for reconcile.Reconciler that records

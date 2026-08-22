@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // TestDeviceShortToHostnameV5 covers the mapping from the 7-char short

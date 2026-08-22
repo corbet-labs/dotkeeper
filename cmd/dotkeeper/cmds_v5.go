@@ -23,12 +23,12 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
 
-	"github.com/julian-corbet/dotkeeper/internal/activity"
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/gitident"
-	"github.com/julian-corbet/dotkeeper/internal/reconcile"
-	"github.com/julian-corbet/dotkeeper/internal/stclient"
-	"github.com/julian-corbet/dotkeeper/internal/watchhealth"
+	"github.com/corbet-labs/dotkeeper/internal/activity"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/gitident"
+	"github.com/corbet-labs/dotkeeper/internal/reconcile"
+	"github.com/corbet-labs/dotkeeper/internal/stclient"
+	"github.com/corbet-labs/dotkeeper/internal/watchhealth"
 )
 
 // reconcilerIface is the narrow surface startReconcileLoop needs from a

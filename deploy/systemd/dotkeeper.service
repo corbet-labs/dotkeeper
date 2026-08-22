@@ -1,6 +1,6 @@
 [Unit]
 Description=dotkeeper — P2P repo sync with git history
-Documentation=https://github.com/julian-corbet/dotkeeper
+Documentation=https://github.com/corbet-labs/dotkeeper
 After=network-online.target
 Wants=network-online.target
 

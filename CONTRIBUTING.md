@@ -140,7 +140,7 @@ The "bad" version leaks first-person narrative, speculates about a future bump, 
 
 ### Bug reports
 
-Open a GitHub issue at <https://github.com/julian-corbet/dotkeeper/issues>. Include:
+Open a GitHub issue at <https://github.com/corbet-labs/dotkeeper/issues>. Include:
 
 - What you expected to happen
 - What actually happened
@@ -200,9 +200,9 @@ then starts the Docker and native Alpine workflows:
   notes. The versioned changelog remains in the tagged source rather than being copied into the
   generated release notes.
 - **`Publish to AUR`** refreshes both `dotkeeper-bin` and `dotkeeper-git`.
-- **`Publish to Homebrew tap`** updates the formula in `julian-corbet/homebrew-dotkeeper`.
+- **`Publish to Homebrew tap`** updates the formula in `corbet-labs/homebrew-dotkeeper`.
 - **`Docker`** builds and pushes the multi-architecture
-  `ghcr.io/julian-corbet/dotkeeper:vX.Y.Z` and `:latest` images, then attaches signed provenance to
+  `ghcr.io/corbet-labs/dotkeeper:vX.Y.Z` and `:latest` images, then attaches signed provenance to
   the pushed manifest.
 - **`Alpine`** builds native x86_64 and aarch64 packages with `abuild` and attaches them to the
   GitHub release.
@@ -217,10 +217,10 @@ Verify:
 - The release contains the expected archives, native packages, aggregate `checksums_sha256.txt`,
   `dotkeeper_vX.Y.Z.sigstore.json` provenance bundle, and a `.sha256` sidecar for each native
   Alpine APK (those APKs are attached after the aggregate manifest is created).
-- `gh attestation verify <downloaded-artifact> --repo julian-corbet/dotkeeper` verifies at least
+- `gh attestation verify <downloaded-artifact> --repo corbet-labs/dotkeeper` verifies at least
   one archive and one nFPM package against the release workflow's signed record.
 - AUR (`https://aur.archlinux.org/packages/dotkeeper-bin`) reflects the new `pkgver`.
-- The Homebrew formula in `julian-corbet/homebrew-dotkeeper` reflects the new version.
+- The Homebrew formula in `corbet-labs/homebrew-dotkeeper` reflects the new version.
 - The Docker and native Alpine workflows completed successfully; the GHCR manifest has a verifiable
   OCI provenance bundle; and the image can be pulled anonymously (package visibility is configured
   separately from repository visibility).
@@ -228,4 +228,6 @@ Verify:
 
 ## Governance
 
-dotkeeper is currently maintained by [@julian-corbet](https://github.com/julian-corbet). Decisions about scope, direction, and releases are the maintainer's call. As the project matures, governance may move to a multi-maintainer model; that change will be announced in the repo.
+dotkeeper is owned by the [Corbet Labs Maintainers team](https://github.com/orgs/corbet-labs/teams/maintainers).
+The project lead has final responsibility for scope, direction, and releases. Changes to this
+decision model will be announced in the repository.

@@ -13,7 +13,7 @@
 
 Use GitHub's private security advisory channel:
 
-> **[Report a vulnerability](https://github.com/julian-corbet/dotkeeper/security/advisories/new)**
+> **[Report a vulnerability](https://github.com/corbet-labs/dotkeeper/security/advisories/new)**
 
 The form encrypts the report end-to-end, gives the maintainer a private workspace
 to coordinate a fix with you, and supports issuing a CVE on disclosure. Please

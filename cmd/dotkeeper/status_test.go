@@ -65,9 +65,7 @@ func TestStatusCmdReportsCorruptState(t *testing.T) {
 	writeMinimalMachineV2(t, tmp, "test-machine")
 
 	// Write a corrupt state.toml so the state load fails.
-	// state.toml lives at $HOME/.local/state/dotkeeper/state.toml
-	// because envWith does not set XDG_STATE_HOME.
-	stateDir := filepath.Join(tmp, ".local", "state", "dotkeeper")
+	stateDir := filepath.Join(tmp, "state", "dotkeeper")
 	if err := os.MkdirAll(stateDir, 0o755); err != nil {
 		t.Fatalf("mkdir %s: %v", stateDir, err)
 	}

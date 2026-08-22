@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // Tests for `dotkeeper health`. Each one isolates XDG state so

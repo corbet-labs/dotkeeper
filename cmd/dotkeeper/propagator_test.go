@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/transport"
+	"github.com/corbet-labs/dotkeeper/internal/transport"
 )
 
 // Tests for the v1.0 daemon-side propagator wiring in main.go.
