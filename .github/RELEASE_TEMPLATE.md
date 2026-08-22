@@ -33,13 +33,13 @@ paru -S dotkeeper-bin
 
 **macOS / Linux (Homebrew):**
 ```bash
-brew tap julian-corbet/dotkeeper
+brew tap corbet-labs/dotkeeper
 brew install dotkeeper
 ```
 
 **From source / binary:** download the archive for your platform below, or:
 ```bash
-go install -tags noassets github.com/julian-corbet/dotkeeper/cmd/dotkeeper@v0.0.0
+go install -tags noassets github.com/corbet-labs/dotkeeper/cmd/dotkeeper@v0.0.0
 ```
 (replace `v0.0.0` with this release tag)
 
@@ -57,6 +57,6 @@ the checksum manifest. Verify a downloaded artifact against GitHub's signed reco
 
 ```bash
 gh attestation verify dotkeeper_X.Y.Z_linux_amd64.tar.gz \
-  --repo julian-corbet/dotkeeper \
-  --signer-workflow julian-corbet/dotkeeper/.github/workflows/release.yml
+  --repo corbet-labs/dotkeeper \
+  --signer-workflow corbet-labs/dotkeeper/.github/workflows/release.yml
 ```

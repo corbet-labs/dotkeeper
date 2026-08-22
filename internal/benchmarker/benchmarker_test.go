@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/transport"
+	"github.com/corbet-labs/dotkeeper/internal/transport"
 )
 
 // stubRecorder implements Recorder with controllable model state +

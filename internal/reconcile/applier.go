@@ -15,9 +15,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/procnice"
-	"github.com/julian-corbet/dotkeeper/internal/stclient"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/procnice"
+	"github.com/corbet-labs/dotkeeper/internal/stclient"
 )
 
 // SyncthingClient is the subset of the Syncthing REST API required by

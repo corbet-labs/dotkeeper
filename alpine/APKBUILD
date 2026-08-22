@@ -4,7 +4,7 @@ pkgname=dotkeeper
 pkgver=0.0.0
 pkgrel=0
 pkgdesc="P2P repo sync with git history — embedded Syncthing + git auto-sync"
-url="https://github.com/julian-corbet/dotkeeper"
+url="https://github.com/corbet-labs/dotkeeper"
 arch="all"
 license="AGPL-3.0-only"
 depends="git"
@@ -14,7 +14,7 @@ subpackages="$pkgname-doc"
 # !check: the complete test tier includes a Docker-backed multipeer suite.
 # !strip: build() already strips the static Go binary.
 options="net !check !strip"
-source="$pkgname-$pkgver.tar.gz::https://github.com/julian-corbet/dotkeeper/archive/v$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/corbet-labs/dotkeeper/archive/v$pkgver.tar.gz"
 builddir="$srcdir/$pkgname-$pkgver"
 
 # Go module + build caches in $srcdir so abuild's tmpfs handles them.

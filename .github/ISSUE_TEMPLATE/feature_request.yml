@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for suggesting an improvement. For open-ended discussion (is this a good idea at all?), use [Discussions](https://github.com/julian-corbet/dotkeeper/discussions) instead.
+        Thanks for suggesting an improvement. For open-ended discussion (is this a good idea at all?), use [Discussions](https://github.com/corbet-labs/dotkeeper/discussions) instead.
 
   - type: textarea
     id: problem

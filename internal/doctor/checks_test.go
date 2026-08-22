@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/conflict"
-	"github.com/julian-corbet/dotkeeper/internal/service"
-	"github.com/julian-corbet/dotkeeper/internal/stclient"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/conflict"
+	"github.com/corbet-labs/dotkeeper/internal/service"
+	"github.com/corbet-labs/dotkeeper/internal/stclient"
 )
 
 // --- Fakes ------------------------------------------------------------

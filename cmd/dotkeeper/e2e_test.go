@@ -123,6 +123,7 @@ func envWith(tmp string) []string {
 	return append(os.Environ(),
 		"XDG_CONFIG_HOME="+filepath.Join(tmp, "config"),
 		"XDG_DATA_HOME="+filepath.Join(tmp, "data"),
+		"XDG_STATE_HOME="+filepath.Join(tmp, "state"),
 		"HOME="+tmp,
 		// Git identity for CI environments where HOME override
 		// loses the global gitconfig

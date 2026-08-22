@@ -1,9 +1,9 @@
 # dotkeeper
 
-[![Release](https://img.shields.io/github/v/release/julian-corbet/dotkeeper?sort=semver&logo=github)](https://github.com/julian-corbet/dotkeeper/releases/latest)
-[![CI](https://github.com/julian-corbet/dotkeeper/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/julian-corbet/dotkeeper/actions/workflows/ci.yml)
-[![License](https://img.shields.io/github/license/julian-corbet/dotkeeper)](LICENSE)
-[![Go Reference](https://pkg.go.dev/badge/github.com/julian-corbet/dotkeeper.svg)](https://pkg.go.dev/github.com/julian-corbet/dotkeeper)
+[![Release](https://img.shields.io/github/v/release/corbet-labs/dotkeeper?sort=semver&logo=github)](https://github.com/corbet-labs/dotkeeper/releases/latest)
+[![CI](https://github.com/corbet-labs/dotkeeper/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/corbet-labs/dotkeeper/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/corbet-labs/dotkeeper)](LICENSE)
+[![Go Reference](https://pkg.go.dev/badge/github.com/corbet-labs/dotkeeper.svg)](https://pkg.go.dev/github.com/corbet-labs/dotkeeper)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12584/badge)](https://www.bestpractices.dev/projects/12584)
 [![Built with Syncthing](https://img.shields.io/badge/built%20with-Syncthing-6eabe0?logo=syncthing&logoColor=white)](https://syncthing.net/)
 
@@ -93,19 +93,19 @@ paru -S dotkeeper-git          # builds from main HEAD
 **macOS / Linux (Homebrew):**
 
 ```bash
-brew tap julian-corbet/dotkeeper
+brew tap corbet-labs/dotkeeper
 brew install dotkeeper
 ```
 
 **From source — use `make`, not `go build` directly:**
 
 ```bash
-git clone https://github.com/julian-corbet/dotkeeper.git
+git clone https://github.com/corbet-labs/dotkeeper.git
 cd dotkeeper
 make build && make install
 ```
 
-Or download a pre-built binary from [Releases](https://github.com/julian-corbet/dotkeeper/releases).
+Or download a pre-built binary from [Releases](https://github.com/corbet-labs/dotkeeper/releases).
 
 > **Why `make build` and not `go build ./...`?**
 >
@@ -118,7 +118,7 @@ Or download a pre-built binary from [Releases](https://github.com/julian-corbet/
 > ```bash
 > go build  -tags noassets ./cmd/dotkeeper        # build the daemon
 > go test   -tags noassets ./...                  # run the test suite
-> go install -tags noassets github.com/julian-corbet/dotkeeper/cmd/dotkeeper@latest
+> go install -tags noassets github.com/corbet-labs/dotkeeper/cmd/dotkeeper@latest
 > ```
 >
 > The `Makefile`, `Dockerfile`, CI workflows, and `release.yml` all set

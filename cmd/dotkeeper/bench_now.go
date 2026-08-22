@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"text/tabwriter"
 
-	"github.com/julian-corbet/dotkeeper/internal/benchmarker"
-	"github.com/julian-corbet/dotkeeper/internal/transport"
+	"github.com/corbet-labs/dotkeeper/internal/benchmarker"
+	"github.com/corbet-labs/dotkeeper/internal/transport"
 	"github.com/spf13/cobra"
 )
 

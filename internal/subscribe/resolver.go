@@ -16,7 +16,7 @@
 package subscribe
 
 import (
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // Offer is one folder offered by one peer. The resolver's caller

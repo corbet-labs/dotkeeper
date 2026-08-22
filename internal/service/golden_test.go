@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/julian-corbet/dotkeeper/internal/testutil"
+	"github.com/corbet-labs/dotkeeper/internal/testutil"
 )
 
 // Golden file tests snapshot the exact output of service unit generation.

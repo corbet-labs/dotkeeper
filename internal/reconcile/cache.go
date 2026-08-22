@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // configCache memoizes parsed TOML config values across reconcile ticks. The

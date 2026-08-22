@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // TestCLIReconcileNotInitialized verifies that running 'dotkeeper reconcile'
@@ -388,12 +388,11 @@ func mustGitInit(t *testing.T, path string) {
 }
 
 // mustReadStateFile reads state.toml from the path used in tests.
-// envWith sets HOME=tmp, so StateDir() falls back to tmp/.local/state/dotkeeper.
+// envWith sets XDG_STATE_HOME explicitly so a developer's environment cannot
+// leak state into the test process.
 func mustReadStateFile(t *testing.T, tmp string) string {
 	t.Helper()
-	// StateDir() logic: $XDG_STATE_HOME/dotkeeper or $HOME/.local/state/dotkeeper.
-	// envWith does not set XDG_STATE_HOME, so state lives under HOME.
-	statePath := filepath.Join(tmp, ".local", "state", "dotkeeper", "state.toml")
+	statePath := filepath.Join(tmp, "state", "dotkeeper", "state.toml")
 	data, err := os.ReadFile(statePath)
 	if err != nil {
 		t.Fatalf("read state.toml at %s: %v", statePath, err)

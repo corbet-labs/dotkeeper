@@ -77,7 +77,7 @@ body:
     attributes:
       label: Pre-submission checks
       options:
-        - label: I've searched [existing issues](https://github.com/julian-corbet/dotkeeper/issues?q=is%3Aissue) for duplicates
+        - label: I've searched [existing issues](https://github.com/corbet-labs/dotkeeper/issues?q=is%3Aissue) for duplicates
           required: true
         - label: This is not a security vulnerability (I would have used the process in SECURITY.md)
           required: true

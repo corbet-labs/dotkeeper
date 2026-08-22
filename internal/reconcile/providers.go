@@ -23,9 +23,9 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/procnice"
-	"github.com/julian-corbet/dotkeeper/internal/stclient"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/procnice"
+	"github.com/corbet-labs/dotkeeper/internal/stclient"
 )
 
 // NewDesiredProvider returns a DesiredProvider that reads machine.toml from

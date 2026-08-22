@@ -6,7 +6,7 @@
 
 services:
   dotkeeper:
-    image: ghcr.io/julian-corbet/dotkeeper:latest
+    image: ghcr.io/corbet-labs/dotkeeper:latest
     container_name: dotkeeper
     restart: unless-stopped
     command: start

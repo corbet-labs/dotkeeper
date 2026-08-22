@@ -20,7 +20,7 @@ import (
 	"github.com/syncthing/syncthing/lib/svcutil"
 	stlib "github.com/syncthing/syncthing/lib/syncthing"
 
-	"github.com/julian-corbet/dotkeeper/internal/stclient"
+	"github.com/corbet-labs/dotkeeper/internal/stclient"
 
 	suture "github.com/thejerf/suture/v4"
 )

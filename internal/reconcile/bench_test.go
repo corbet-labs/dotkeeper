@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 // Benchmarks for the reconcile package's per-tick hot paths.

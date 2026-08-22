@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
-	"github.com/julian-corbet/dotkeeper/internal/transport"
+	"github.com/corbet-labs/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/transport"
 )
 
 func mkdirAll(dir string, perm uint32) error { return os.MkdirAll(dir, os.FileMode(perm)) }

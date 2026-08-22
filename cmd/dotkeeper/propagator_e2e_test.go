@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/transport"
+	"github.com/corbet-labs/dotkeeper/internal/transport"
 )
 
 // TestE2EDaemonPropagatorDeliversCommitViaGitSSH wires the entire

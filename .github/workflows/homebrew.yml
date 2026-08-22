@@ -5,7 +5,7 @@ name: Publish to Homebrew tap
 # new version + SHA256s and pushes it.
 #
 # Needs: PACKAGES_TOKEN secret — classic PAT with 'public_repo' scope on an
-# account that can write to julian-corbet/homebrew-dotkeeper.
+# account that can write to corbet-labs/homebrew-dotkeeper.
 
 on:
   push:
@@ -53,7 +53,7 @@ jobs:
           VERSION: ${{ steps.ver.outputs.version }}
         run: |
           for i in $(seq 1 60); do
-            if gh release view "v${VERSION}" --repo julian-corbet/dotkeeper \
+            if gh release view "v${VERSION}" --repo corbet-labs/dotkeeper \
                 --json assets -q '.assets[].name' 2>/dev/null | grep -q '^checksums_sha256.txt$'; then
               echo "release assets ready"
               exit 0
@@ -69,13 +69,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.ver.outputs.version }}
         run: |
-          gh release download "v${VERSION}" --repo julian-corbet/dotkeeper \
+          gh release download "v${VERSION}" --repo corbet-labs/dotkeeper \
             --pattern 'checksums_sha256.txt' --dir /tmp
 
       - name: Check out tap repo
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: julian-corbet/homebrew-dotkeeper
+          repository: corbet-labs/homebrew-dotkeeper
           token: ${{ secrets.PACKAGES_TOKEN }}
           path: tap
 
@@ -105,20 +105,20 @@ jobs:
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/julian-corbet/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_darwin_arm64.tar.gz"
+                url "https://github.com/corbet-labs/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_darwin_arm64.tar.gz"
                 sha256 "${SHA_DARWIN_ARM64}"
               else
-                url "https://github.com/julian-corbet/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_darwin_amd64.tar.gz"
+                url "https://github.com/corbet-labs/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_darwin_amd64.tar.gz"
                 sha256 "${SHA_DARWIN_AMD64}"
               end
             end
 
             on_linux do
               if Hardware::CPU.arm?
-                url "https://github.com/julian-corbet/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_linux_arm64.tar.gz"
+                url "https://github.com/corbet-labs/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_linux_arm64.tar.gz"
                 sha256 "${SHA_LINUX_ARM64}"
               else
-                url "https://github.com/julian-corbet/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_linux_amd64.tar.gz"
+                url "https://github.com/corbet-labs/dotkeeper/releases/download/v${VERSION}/dotkeeper_${VERSION}_linux_amd64.tar.gz"
                 sha256 "${SHA_LINUX_AMD64}"
               end
             end
@@ -145,7 +145,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          if git diff --quiet; then
+          if [ -z "$(git status --porcelain -- Formula/dotkeeper.rb)" ]; then
             echo "No changes — formula already at ${VERSION}"
           else
             git add Formula/dotkeeper.rb

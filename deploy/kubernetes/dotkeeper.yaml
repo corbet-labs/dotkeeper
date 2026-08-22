@@ -60,7 +60,7 @@ spec:
     spec:
       containers:
         - name: dotkeeper
-          image: ghcr.io/julian-corbet/dotkeeper:latest
+          image: ghcr.io/corbet-labs/dotkeeper:latest
           command: ["dotkeeper", "start"]
           env:
             - name: XDG_CONFIG_HOME
@@ -148,7 +148,7 @@ spec:
         spec:
           containers:
             - name: sync
-              image: ghcr.io/julian-corbet/dotkeeper:latest
+              image: ghcr.io/corbet-labs/dotkeeper:latest
               command: ["dotkeeper", "sync"]
               env:
                 - name: XDG_CONFIG_HOME

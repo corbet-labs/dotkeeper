@@ -16,28 +16,28 @@ import (
 // same repo end up with different canonicals, their subscriptions
 // silently won't match — the mesh fragments invisibly.
 func TestCanonicalRecognisesEveryGitURLSyntax(t *testing.T) {
-	want := "github.com/julian-corbet/dotkeeper"
+	want := "github.com/corbet-labs/dotkeeper"
 	cases := []string{
 		// HTTPS variants (most common from `gh repo clone`)
-		"https://github.com/julian-corbet/dotkeeper.git",
-		"https://github.com/julian-corbet/dotkeeper",
-		"https://github.com/julian-corbet/dotkeeper/",
-		"HTTPS://GitHub.com/julian-corbet/dotkeeper.git",
+		"https://github.com/corbet-labs/dotkeeper.git",
+		"https://github.com/corbet-labs/dotkeeper",
+		"https://github.com/corbet-labs/dotkeeper/",
+		"HTTPS://GitHub.com/corbet-labs/dotkeeper.git",
 		// HTTP (rare but seen in old configs / internal mirrors)
-		"http://github.com/julian-corbet/dotkeeper.git",
+		"http://github.com/corbet-labs/dotkeeper.git",
 		// SSH URL-form
-		"ssh://git@github.com/julian-corbet/dotkeeper.git",
-		"ssh://git@github.com:22/julian-corbet/dotkeeper.git", // explicit default port
+		"ssh://git@github.com/corbet-labs/dotkeeper.git",
+		"ssh://git@github.com:22/corbet-labs/dotkeeper.git", // explicit default port
 		// SCP-form (the most common form for SSH cloning)
-		"git@github.com:julian-corbet/dotkeeper.git",
-		"git@github.com:julian-corbet/dotkeeper",
-		"git@GitHub.com:julian-corbet/dotkeeper.git",
+		"git@github.com:corbet-labs/dotkeeper.git",
+		"git@github.com:corbet-labs/dotkeeper",
+		"git@GitHub.com:corbet-labs/dotkeeper.git",
 		// User-less SCP-form (rare but valid)
-		"github.com:julian-corbet/dotkeeper.git",
+		"github.com:corbet-labs/dotkeeper.git",
 		// git:// protocol (deprecated by GitHub but possible elsewhere)
-		"git://github.com/julian-corbet/dotkeeper.git",
+		"git://github.com/corbet-labs/dotkeeper.git",
 		// Whitespace tolerance
-		"  https://github.com/julian-corbet/dotkeeper.git  ",
+		"  https://github.com/corbet-labs/dotkeeper.git  ",
 	}
 	for _, in := range cases {
 		t.Run(in, func(t *testing.T) {
@@ -158,12 +158,12 @@ func TestCanonicalSelfHostedAndCustomDomains(t *testing.T) {
 // in subscription configs. The output should match what the same
 // repo's git URL produces.
 func TestCanonicalNoScheme(t *testing.T) {
-	got, err := Canonical("github.com/julian-corbet/dotkeeper")
+	got, err := Canonical("github.com/corbet-labs/dotkeeper")
 	if err != nil {
 		t.Fatalf("Canonical: %v", err)
 	}
-	if got != "github.com/julian-corbet/dotkeeper" {
-		t.Errorf("bare host/path: got %q, want %q", got, "github.com/julian-corbet/dotkeeper")
+	if got != "github.com/corbet-labs/dotkeeper" {
+		t.Errorf("bare host/path: got %q, want %q", got, "github.com/corbet-labs/dotkeeper")
 	}
 }
 

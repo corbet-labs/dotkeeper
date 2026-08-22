@@ -6,7 +6,7 @@ package subscribe
 import (
 	"testing"
 
-	"github.com/julian-corbet/dotkeeper/internal/config"
+	"github.com/corbet-labs/dotkeeper/internal/config"
 )
 
 func TestResolveAcceptsMatchingOffer(t *testing.T) {

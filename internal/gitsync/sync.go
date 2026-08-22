@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/julian-corbet/dotkeeper/internal/procnice"
+	"github.com/corbet-labs/dotkeeper/internal/procnice"
 )
 
 // SyncRepo pulls, auto-commits, and pushes a single git repo.

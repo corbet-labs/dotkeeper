@@ -1,4 +1,4 @@
-module github.com/julian-corbet/dotkeeper
+module github.com/corbet-labs/dotkeeper
 
 go 1.26.6
 
