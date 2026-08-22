@@ -7,6 +7,8 @@ dotkeeper adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.2.11] - 2026-08-22
+
 ### Security
 
 - Moved the pinned Go toolchain and container builder from 1.26.5 to 1.26.6, clearing six
@@ -2107,7 +2109,8 @@ These changes are silent: same behaviour, fewer cycles per reconcile.
 - CI: bumped `actions/upload-artifact`, `actions/download-artifact`, and
   `actions/setup-go` to current stable versions.
 
-[Unreleased]: https://github.com/corbet-labs/dotkeeper/compare/v1.2.10...HEAD
+[Unreleased]: https://github.com/corbet-labs/dotkeeper/compare/v1.2.11...HEAD
+[1.2.11]: https://github.com/corbet-labs/dotkeeper/compare/v1.2.10...v1.2.11
 [1.2.10]: https://github.com/corbet-labs/dotkeeper/compare/v1.2.9...v1.2.10
 [1.2.9]: https://github.com/corbet-labs/dotkeeper/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/corbet-labs/dotkeeper/compare/v1.2.7...v1.2.8
