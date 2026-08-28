@@ -27,6 +27,7 @@ Thanks for contributing! Please fill in the sections below. Delete any that don'
 - [ ] `golangci-lint run --build-tags noassets ./...` clean
 - [ ] For changes to `internal/stengine`: restarted the service locally and `dotkeeper status` still peers
 - [ ] For user-visible changes: README / CONTRIBUTING updated if applicable
+- [ ] I have read and agree to version 1.0 of the Individual Contributor License Agreement at https://github.com/corbet-labs/.github/blob/cla-v1.0/CLA.md.
 
 ## Notes for reviewers
 

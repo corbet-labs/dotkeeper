@@ -2,15 +2,15 @@
 
 Contributions are welcome. Bug reports, feature requests, and pull requests all help.
 
-## Contributor License Agreement (CLA)
+## Individual Contributor License Agreement
 
-By submitting a pull request, you agree to the following:
+Contributions remain available under AGPL-3.0. Before submitting a pull request, read and agree to
+version 1.0 of the organization-wide [Individual Contributor License Agreement][icla]. Do not
+contribute material unless you have the right to grant its terms.
 
-1. You license your contribution under the same license as this project (AGPL-3.0).
-2. You grant the project maintainer a perpetual, worldwide, non-exclusive, royalty-free, irrevocable license to use, modify, sublicense, and relicense your contribution under any license, including proprietary licenses.
-3. You confirm that you have the right to make this grant (i.e., the contribution is your original work, or you have the necessary rights from your employer or other rights holder).
+> I have read and agree to version 1.0 of the Individual Contributor License Agreement at https://github.com/corbet-labs/.github/blob/cla-v1.0/CLA.md.
 
-This CLA ensures the maintainer can adapt the project's licensing as needed while keeping the open-source version available under AGPL-3.0.
+[icla]: https://github.com/corbet-labs/.github/blob/cla-v1.0/CLA.md
 
 ## Development
 
